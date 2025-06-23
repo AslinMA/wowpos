@@ -1,0 +1,537 @@
+<div
+  class=" bg-white dark:bg-white-100 shadow-md sm:rounded-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-3 sm:p-5 mx-auto lg:mx-0 lg:ml-[300px] lg:mr-[30px] mt-20">
+  <!-- Display -->
+  <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm overflow-hidden">
+
+    <div class="px-5 py-5 flex items-center space-x-4">
+
+      <div class="flex-shrink-0 text-yellow-500">
+        <!-- Icon: Desktop Computer (Display) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9.75 17h4.5M4 6h16v9a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" />
+        </svg>
+      </div>
+      <div class="flex-1">
+        <h5 class="text-lg font-medium text-gray-900 mb-2" >Display</h5>
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="text-sm font-semibold text-gray-800">Today</span>
+            <span class="text-sm font-bold text-gray-800">{{ dattoDaytotalsByCatogory['Display'] }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm font-semibold text-gray-800">Total</span>
+            <span class="text-sm font-bold text-gray-800">{{ totals['Display'] }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Chargers -->
+  <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm overflow-hidden">
+    <div class="px-5 py-5 flex items-center space-x-4">
+      <div class="flex-shrink-0 text-yellow-500">
+        <!-- Icon: Lightning Bolt -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <div class="flex-1">
+        <h5 class="text-lg font-medium text-gray-900 mb-2">Chargers</h5>
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="text-sm font-semibold text-gray-800">Today</span>
+            <span class="text-sm font-bold text-gray-800">{{ dattoDaytotalsByCatogory['charger'] }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm font-semibold text-gray-800">Total</span>
+            <span class="text-sm font-bold text-gray-800">{{ totals['charger'] }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Temperd (Screen Protector) -->
+  <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm overflow-hidden">
+    <div class="px-5 py-5 flex items-center space-x-4">
+      <div class="flex-shrink-0 text-yellow-500">
+        <!-- Icon: Shield (representing protection) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      </div>
+      <div class="flex-1">
+        <h5 class="text-lg font-medium text-gray-900 mb-2">Temperd</h5>
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="text-sm font-semibold text-gray-800">Today</span>
+            <span class="text-sm font-bold text-gray-800">{{ dattoDaytotalsByCatogory['Temperd'] }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm font-semibold text-gray-800">Total</span>
+            <span class="text-sm font-bold text-gray-800">{{ totals['Temperd'] }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Handfrees -->
+  <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm overflow-hidden">
+    <div class="px-5 py-5 flex items-center space-x-4">
+      <div class="flex-shrink-0 text-yellow-500">
+        <!-- Icon: Music Note or Headphones -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 12v2a4 4 0 004 4v-6a4 4 0 00-4 0zm16 0v2a4 4 0 01-4 4v-6a4 4 0 014 0zM12 4a8 8 0 00-8 8v1h2v-1a6 6 0 1112 0v1h2v-1a8 8 0 00-8-8z" />
+        </svg>
+      </div>
+      <div class="flex-1">
+        <h5 class="text-lg font-medium text-gray-900 mb-2">Handfrees</h5>
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="text-sm font-semibold text-gray-800">Today</span>
+            <span class="text-sm font-bold text-gray-800">{{ dattoDaytotalsByCatogory['Handfree'] }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm font-semibold text-gray-800">Total</span>
+            <span class="text-sm font-bold text-gray-800">{{ totals['Handfree'] }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+<div
+  class="flex flex-col lg:flex-row justify-center gap-6 bg-white dark:bg-white-100 shadow-md sm:rounded-lg p-4 sm:p-6 mx-2 sm:mx-auto lg:ml-[300px] lg:mr-[30px] mt-6">
+
+  <!-- Sales Chart -->
+  <div class="w-full lg:w-2/3 bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4">
+    <div class="flex flex-col sm:flex-row justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center mb-4 sm:mb-0">
+        <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+          <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 19">
+            <path
+              d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
+            <path
+              d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+          </svg>
+        </div>
+        <div>
+          <h5 class="text-2xl font-bold text-gray-900 dark:text-white" id="total-sales">Rs. 45,000</h5>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Total sales this week</p>
+        </div>
+      </div>
+      <div>
+        <span class="bg-green-100 text-green-800 text-xs font-medium inline-flex items-center px-2.5 py-1 rounded-md">
+          <svg class="w-2.5 h-2.5 mr-1.5" fill="none" viewBox="0 0 10 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 13V1m0 0L1 5m4-4 4 4" />
+          </svg>
+          12.5%
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+      <dl class="flex items-center">
+        <dt class="text-gray-500 text-sm mr-1">Today's Revenue:</dt>
+        <dd class="text-gray-400 text-sm font-semibold" id="today-revenue">Rs. 8,500</dd>
+      </dl>
+      <dl class="flex items-center justify-start sm:justify-end">
+        <dt class="text-gray-500 text-sm mr-1">Profit Margin:</dt>
+        <dd class="text-gray-400 text-sm font-semibold">28%</dd>
+      </dl>
+    </div>
+
+    <div class="overflow-x-auto">
+      <canvas id="salesChart" class="w-full h-64"></canvas>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="w-full lg:w-1/3 bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4">
+    <h5 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Quick Actions</h5>
+
+    <div class="space-y-3 mb-6">
+      <button onclick="addNewStock()"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg">+ Add New
+        Stock</button>
+      <button onclick="viewLowStock()"
+        class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg">⚠️ View Low Stock
+        Items</button>
+      <button onclick="viewSalesReport()"
+        class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg">📊 Sales
+        Report</button>
+    </div>
+
+    <div class="border-t pt-4">
+      <h6 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Alerts</h6>
+      <div class="space-y-2">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
+          <span class="font-semibold">5 items</span> are running low on stock
+        </div>
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
+          <span class="font-semibold">3 items</span> haven't been sold in 30 days
+        </div>
+        <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-800">
+          <span class="font-semibold">Today's target</span> achieved 85%
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class=" shadow-md sm:rounded-lg mt-10 bg-white-50 dark:bg-white-900 p-3 sm:p-5 mx-auto lg:mx-0 lg:ml-[300px] lg:mr-[30px]"
+    (click)="closeDropdowns()">
+    <h1 class="text-3xl font-medium mb-5 dark:text-gray-600">Sales Details Management</h1>
+    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <!-- Start coding here -->
+        <div class="bg-white dark:bg-white-100 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                <div class="w-full md:w-1/2">
+                    <form class="flex items-center" (ngSubmit)="onSearch()">
+                        <label for="simple-search" class="sr-only">Search</label>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                    fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="text" id="simple-search" [(ngModel)]="searchTerm" (input)="onSearch()"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Search by customer name, category, brand, model, or transaction ID" name="search">
+                        </div>
+                    </form>
+                </div>
+                <div
+                    class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    
+                    <div class="flex items-center space-x-3 w-full md:w-auto">
+                        <button (click)="toggleActionsDropdown(); $event.stopPropagation()"
+                            class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                            type="button">
+                            <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                            Actions
+                        </button>
+                        <div [class.hidden]="!isActionsDropdownOpen"
+                            class="absolute z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 mt-16"
+                            (click)="$event.stopPropagation()">
+                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
+                                <li>
+                                    <button (click)="clearFilters(); closeDropdowns()"
+                                        class="block w-full text-left py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        Clear Filters</button>
+                                </li>
+                                <li>
+                                    <button (click)="exportSalesData(); closeDropdowns()"
+                                        class="block w-full text-left py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        Export Data</button>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Date Filter -->
+                        <button (click)="toggleDateFilterDropdown(); $event.stopPropagation()"
+                            class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                            type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Date
+                            <span *ngIf="selectedDateRange.start || selectedDateRange.end"
+                                class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-1">1</span>
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div [class.hidden]="!isDateFilterDropdownOpen"
+                            class="absolute z-10 w-64 p-3 bg-white rounded-lg shadow dark:bg-gray-700 mt-16"
+                            (click)="$event.stopPropagation()">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Filter by Date</h6>
+                            <div class="space-y-2">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">From Date</label>
+                                    <input type="date" [(ngModel)]="selectedDateRange.start" (change)="applyDateFilter()"
+                                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">To Date</label>
+                                    <input type="date" [(ngModel)]="selectedDateRange.end" (change)="applyDateFilter()"
+                                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+                                </div>
+                                <button (click)="clearDateFilter()" 
+                                    class="w-full mt-2 px-3 py-1 text-xs text-gray-600 bg-gray-100 hover:bg-gray-200 rounded dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500">
+                                    Clear Date Filter
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Price Filter -->
+                        <button (click)="togglePriceFilterDropdown(); $event.stopPropagation()"
+                            class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                            type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                            </svg>
+                            Price
+                            <span *ngIf="selectedPriceRange.min > 0 || selectedPriceRange.max < 999999"
+                                class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-1">1</span>
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div [class.hidden]="!isPriceFilterDropdownOpen"
+                            class="absolute z-10 w-64 p-3 bg-white rounded-lg shadow dark:bg-gray-700 mt-16"
+                            (click)="$event.stopPropagation()">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Filter by Price</h6>
+                            <div class="space-y-2">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Min Price</label>
+                                    <input type="number" [(ngModel)]="selectedPriceRange.min" (input)="applyPriceFilter()" min="0"
+                                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Max Price</label>
+                                    <input type="number" [(ngModel)]="selectedPriceRange.max" (input)="applyPriceFilter()" min="0"
+                                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+                                </div>
+                                <button (click)="clearPriceFilter()" 
+                                    class="w-full mt-2 px-3 py-1 text-xs text-gray-600 bg-gray-100 hover:bg-gray-200 rounded dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500">
+                                    Clear Price Filter
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Brand Filter -->
+                        <button (click)="toggleBrandFilterDropdown(); $event.stopPropagation()"
+                            class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                            type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Brand
+                            <span *ngIf="selectedBrands.length > 0"
+                                class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{selectedBrands.length}}</span>
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div [class.hidden]="!isBrandFilterDropdownOpen"
+                            class="absolute z-10 w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700 mt-16"
+                            (click)="$event.stopPropagation()">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose brand</h6>
+                            <ul class="space-y-2 text-sm" *ngIf="availableBrands.length > 0; else noBrands">
+                                <li class="flex items-center" *ngFor="let brand of availableBrands">
+                                    <input [id]="'brand-' + brand" type="checkbox" [checked]="isBrandSelected(brand)"
+                                        (change)="onBrandFilterChange(brand, $event)"
+                                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label [for]="'brand-' + brand"
+                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{brand}}</label>
+                                </li>
+                            </ul>
+                            <ng-template #noBrands>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">No brands available</p>
+                            </ng-template>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <button (click)="toggleCategoryFilterDropdown(); $event.stopPropagation()"
+                            class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                            type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14-7H3a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" />
+                            </svg>
+                            Category
+                            <span *ngIf="selectedCategories.length > 0"
+                                class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{selectedCategories.length}}</span>
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div [class.hidden]="!isCategoryFilterDropdownOpen"
+                            class="absolute z-10 w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700 mt-16"
+                            (click)="$event.stopPropagation()">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose category</h6>
+                            <ul class="space-y-2 text-sm" *ngIf="availableCategories.length > 0; else noCategories">
+                                <li class="flex items-center" *ngFor="let category of availableCategories">
+                                    <input [id]="'category-' + category" type="checkbox" [checked]="isCategorySelected(category)"
+                                        (change)="onCategoryFilterChange(category, $event)"
+                                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label [for]="'category-' + category"
+                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{category}}</label>
+                                </li>
+                            </ul>
+                            <ng-template #noCategories>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">No categories available</p>
+                            </ng-template>
+                        </div>
+
+                        <!-- Model Filter -->
+                        <button (click)="toggleModelFilterDropdown(); $event.stopPropagation()"
+                            class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                            type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                            Model
+                            <span *ngIf="selectedModels.length > 0"
+                                class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{selectedModels.length}}</span>
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div [class.hidden]="!isModelFilterDropdownOpen"
+                            class="absolute z-10 w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700 mt-16"
+                            (click)="$event.stopPropagation()">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose model</h6>
+                            <ul class="space-y-2 text-sm" *ngIf="availableModels.length > 0; else noModels">
+                                <li class="flex items-center" *ngFor="let model of availableModels">
+                                    <input [id]="'model-' + model" type="checkbox" [checked]="isModelSelected(model)"
+                                        (change)="onModelFilterChange(model, $event)"
+                                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label [for]="'model-' + model"
+                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{model}}</label>
+                                </li>
+                            </ul>
+                            <ng-template #noModels>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">No models available</p>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-dark dark:text-dark-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-yellow-100 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Date</th>
+                            <th scope="col" class="px-4 py-3">Transaction ID</th>
+                            <th scope="col" class="px-4 py-3">Customer Name</th>
+                            <th scope="col" class="px-4 py-3">Phone</th>
+                            <th scope="col" class="px-4 py-3">Item ID</th>
+                            <th scope="col" class="px-4 py-3">Category</th>
+                            <th scope="col" class="px-4 py-3">Brand</th>
+                            <th scope="col" class="px-4 py-3">Model</th>
+                            <th scope="col" class="px-4 py-3">Quantity</th>
+                            <th scope="col" class="px-4 py-3">Sold Price</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="paginatedSalesDetails.length > 0; else noSalesDetails">
+                        <tr class="border-b dark:border-gray-700 "
+                            *ngFor="let sale of paginatedSalesDetails; let i = index">
+                            <td class="px-4 py-3">{{formatDate(sale.date)}}</td>
+                            <td class="px-4 py-3 font-medium text-dark-900">{{sale.transactionId || 'N/A'}}</td>
+                            <td class="px-4 py-3">{{sale.name || 'N/A'}}</td>
+                            <td class="px-4 py-3">{{sale.phoneNumber || 'N/A'}}</td>
+                            <td class="px-4 py-3">{{sale.id || 'N/A'}}</td>
+                            <td class="px-4 py-3">{{sale.category || 'N/A'}}</td>
+                            <td class="px-4 py-3">{{sale.brand || 'N/A'}}</td>
+                            <td class="px-4 py-3">{{sale.model || 'N/A'}}</td>
+                            <td class="px-4 py-3">{{sale.quantity || 0}}</td>
+                            <td class="px-4 py-3 font-semibold text-green-600">Rs.{{sale.discountedPrice
+ || 0}}</td>
+                        </tr>
+                    </tbody>
+                    <ng-template #noSalesDetails>
+                        <tbody>
+                            <tr>
+                                <td colspan="10" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                                    <div class="flex flex-col items-center">
+                                        <svg class="w-12 h-12 mb-4 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                                            </path>
+                                        </svg>
+                                        <p class="text-lg font-medium">No sales records found</p>
+                                        <p class="text-sm">Try adjusting your search or filter criteria</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </ng-template>
+                </table>
+            </div>
+            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+                aria-label="Table navigation" *ngIf="totalSalesItems > 0">
+                <span class="text-sm font-normal text-dark-500 dark:text-dark-400">
+                    Showing
+                    <span
+                        class="font-semibold text-gray-900 dark:text-dark">{{getCurrentSalesShowingRange().start}}-{{getCurrentSalesShowingRange().end}}</span>
+                    of
+                    <span class="font-semibold text-gray-900 dark:text-dark">{{totalSalesItems}}</span>
+                </span>
+                <ul class="inline-flex items-stretch -space-x-px" *ngIf="totalSalesPages > 1">
+                    <li>
+                        <button (click)="goToPreviousSalesPage()" [disabled]="currentSalesPage === 1"
+                            class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                            type="button">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </li>
+                    <li *ngFor="let page of getSalesPageNumbers()">
+                        <button (click)="goToSalesPage(page)" [class.bg-primary-50]="currentSalesPage === page"
+                            [class.text-primary-600]="currentSalesPage === page"
+                            class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            type="button">{{page}}</button>
+                    </li>
+                    <li *ngIf="totalSalesPages > 5 && currentSalesPage < totalSalesPages - 2">
+                        <span
+                            class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400">...</span>
+                    </li>
+                    <li *ngIf="totalSalesPages > 5 && currentSalesPage < totalSalesPages - 2">
+                        <button (click)="goToSalesPage(totalSalesPages)"
+                            class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            type="button">{{totalSalesPages}}</button>
+                    </li>
+                    <li>
+                        <button (click)="goToNextSalesPage()" [disabled]="currentSalesPage === totalSalesPages"
+                            class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                            type="button">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
