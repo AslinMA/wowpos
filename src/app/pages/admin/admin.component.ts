@@ -2,19 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { sellDeatils } from '../../models/sellDeatils';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartData } from 'chart.js';
 
 @Component({
   selector: 'app-admin',
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, BaseChartDirective],
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.css'
+  styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
+
+
 
   totals: { [product: string]: number } = {};
 
   dattoDaytotalsByCatogory: { [product: string]: number } = {};
+
+  totalAmmuntOfDayByDay: { [product: string]: number } = {};
 
 
   // Data properties
@@ -23,6 +30,7 @@ export class AdminComponent implements OnInit {
   paginatedSalesDetails: sellDeatils[] = [];
 
   // Search and filter properties
+  todayRevenue:number=0;
   searchTerm: string = '';
   selectedBrands: string[] = [];
   selectedCategories: string[] = [];
@@ -49,16 +57,36 @@ export class AdminComponent implements OnInit {
   totalSalesItems = 0;
   totalSalesPages = 0;
 
+  public chartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: []
+  };
+
+  public chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false  // Hide legend (small colored box with label)
+      }
+    }
+  };
+
+  public chartType: 'bar' = 'bar';
+
   constructor(
 
     private http: HttpClient,
 
   ) { }
 
+
+
   ngOnInit(): void {
     this.loadSalesDetails();
     this.updateFilterOptions();
     this.applyFilters();
+
+
   }
 
   // Load sales data (replace with your actual data service)
@@ -73,14 +101,26 @@ export class AdminComponent implements OnInit {
           this.applyFilters();
           this.updateFilterOptions();
           this.updatePagination();
-          this.totals = this.getTotalSoldByProduct();
 
-          // console.log(JSON.stringify(this.totals, null, 2));
-          // console.log(this.totals['Display']);
+          this.totals = this.getTotalSoldByProduct();
+          console.log(JSON.stringify(this.totals, null, 2));
+          console.log(this.totals['Display']);
+
           const todaySalesByProduct = this.getTodaySalesByProduct();
           console.log('Today\'s sales by product:', todaySalesByProduct);
 
+          this.totalAmmuntOfDayByDay = this.getTotalAmmountOfDayByDay();
+          console.log(JSON.stringify(this.totalAmmuntOfDayByDay, null, 2));
+          const labels = Object.keys(this.totalAmmuntOfDayByDay);
+          const dataOfChart = labels.map(date => this.totalAmmuntOfDayByDay[date]);
 
+          this.chartData = {
+            labels,
+            datasets: [
+              { data: dataOfChart, label: 'sale' }
+            ]
+          };
+          
         },
         error => {
           console.error("Error fetching products", error);
@@ -363,12 +403,26 @@ export class AdminComponent implements OnInit {
           this.dattoDaytotalsByCatogory[productName] = 0;
         }
         this.dattoDaytotalsByCatogory[productName] += Number(sale.quantity);
+        this.todayRevenue=this.todayRevenue+Number(sale.discountedPrice);//today total revenue
+           console.log("today"+this.todayRevenue);
+           
       }
     });
 
     return this.dattoDaytotalsByCatogory;
   }
 
+  getTotalAmmountOfDayByDay(): { [product: string]: number } {
 
+    this.salesDetails.forEach(sale => {
+      // You can use sale.name, sale.model, or sale.category as the key
+      const key = sale.date; // or sale.model, or sale.category
+      if (!this.totalAmmuntOfDayByDay[key]) {
+        this.totalAmmuntOfDayByDay[key] = 0;
+      }
+      this.totalAmmuntOfDayByDay[key] += Number(sale.discountedPrice);
+    });
+    return this.totalAmmuntOfDayByDay;
+  }
 
 }
