@@ -10,6 +10,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { SellingComponent } from './pages/selling/selling.component';
 import { NotificationComponent } from './pages/notification/notification.component';
 import { CartComponent } from './pages/cart/cart.component';
+import { SalesReportsComponent } from './pages/sales-reports/sales-reports.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,7 @@ export const routes: Routes = [
       { path: 'singup', component: SingupComponent },
       { path: 'notification', component: NotificationComponent },
       { path: 'cart', component: CartComponent },
+      { path: 'sales-reports', component: SalesReportsComponent },
     ]
   }
 ];

@@ -1,0 +1,242 @@
+
+    <!-- Page wrapper aligned to your layout offsets -->
+<section
+  class="bg-white dark:bg-white-100 shadow-md sm:rounded-lg p-4 sm:p-6 mx-2 sm:mx-auto lg:ml-[300px] lg:mr-[30px] mt-20">
+
+  <!-- Header + Actions -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
+    <h1 class="text-3xl font-medium text-gray-900 dark:text-gray-600">Sales Reports</h1>
+
+    <div class="flex gap-2">
+      <button (click)="exportCSV()"
+              class="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-medium">
+        Export CSV
+      </button>
+      <button (click)="printPage()"
+              class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium">
+        Print
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters Card -->
+  <div class="bg-white dark:bg-white-100 shadow-sm sm:rounded-lg p-4 mb-6">
+    <div class="flex flex-wrap items-end gap-3">
+
+      <!-- Date range -->
+      <div>
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-500 mb-1">From</label>
+        <input type="date" [(ngModel)]="fromDate" (change)="applyAll()"
+               class="w-44 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-500 mb-1">To</label>
+        <input type="date" [(ngModel)]="toDate" (change)="applyAll()"
+               class="w-44 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+      </div>
+
+      <!-- Presets -->
+      <div class="flex gap-2">
+        <button class="px-3 py-2 text-xs border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-400"
+                (click)="setPreset('today')">Today</button>
+        <button class="px-3 py-2 text-xs border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-400"
+                (click)="setPreset('yesterday')">Yesterday</button>
+        <button class="px-3 py-2 text-xs border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-400"
+                (click)="setPreset('last7')">Last 7d</button>
+        <button class="px-3 py-2 text-xs border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-400"
+                (click)="setPreset('last30')">Last 30d</button>
+        <button class="px-3 py-2 text-xs border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-400"
+                (click)="setPreset('mtd')">MTD</button>
+        <button class="px-3 py-2 text-xs border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-400"
+                (click)="setPreset('ytd')">YTD</button>
+      </div>
+
+      <!-- Category -->
+      <div>
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-500 mb-1">Category</label>
+        <select multiple [(ngModel)]="categories" (change)="applyAll()"
+                class="min-w-[12rem] max-w-[18rem] h-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+          <option *ngFor="let c of allCategories" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+
+      <!-- Brand -->
+      <div>
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-500 mb-1">Brand</label>
+        <select multiple [(ngModel)]="brands" (change)="applyAll()"
+                class="min-w-[12rem] max-w-[18rem] h-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+          <option *ngFor="let b of allBrands" [value]="b">{{ b }}</option>
+        </select>
+      </div>
+
+      <!-- Model -->
+      <div>
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-500 mb-1">Model</label>
+        <select multiple [(ngModel)]="models" (change)="applyAll()"
+                class="min-w-[12rem] max-w-[18rem] h-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+          <option *ngFor="let m of allModels" [value]="m">{{ m }}</option>
+        </select>
+      </div>
+
+      <!-- Spacer -->
+      <div class="flex-1"></div>
+
+      <!-- Search + Clear -->
+      <div class="flex items-end gap-2">
+        <div>
+          <label class="block text-xs font-medium text-gray-700 dark:text-gray-500 mb-1">Search</label>
+          <input [(ngModel)]="search" (input)="applyAll()"
+                 placeholder="Customer / Txn / Brand / Model"
+                 class="w-64 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+        </div>
+        <button (click)="clearFilters()"
+                class="px-4 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-100 text-sm text-gray-900 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+          Clear
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
+    <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm p-4">
+      <div class="text-xs text-gray-800">Gross Sales</div>
+      <div class="text-xl font-semibold">Rs. {{ grossSales | number }}</div>
+    </div>
+    <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm p-4">
+      <div class="text-xs text-gray-800">Net Sales</div>
+      <div class="text-xl font-semibold">Rs. {{ netSales | number }}</div>
+    </div>
+    <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm p-4">
+      <div class="text-xs text-gray-800">Orders</div>
+      <div class="text-xl font-semibold">{{ totalOrders | number }}</div>
+    </div>
+    <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm p-4">
+      <div class="text-xs text-gray-800">Units Sold</div>
+      <div class="text-xl font-semibold">{{ unitsSold | number }}</div>
+    </div>
+    <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm p-4">
+      <div class="text-xs text-gray-800">Discounts</div>
+      <div class="text-xl font-semibold">Rs. {{ discounts | number }}</div>
+    </div>
+    <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm p-4">
+      <div class="text-xs text-gray-800">AOV</div>
+      <div class="text-xl font-semibold">Rs. {{ aov | number:'1.0-2' }}</div>
+    </div>
+  </div>
+
+  <!-- Charts (match your card style) -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+      <div class="flex items-center justify-between pb-2 mb-2 border-b border-gray-200 dark:border-gray-700">
+        <h5 class="text-lg font-medium text-gray-900 dark:text-white">Revenue Over Time</h5>
+      </div>
+      <div class="h-64">
+        <canvas baseChart [data]="revenueOverTimeData" [options]="revenueOverTimeOptions" [type]="'line'"></canvas>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+      <div class="flex items-center justify-between pb-2 mb-2 border-b border-gray-200 dark:border-gray-700">
+        <h5 class="text-lg font-medium text-gray-900 dark:text-white">Units Sold Over Time</h5>
+      </div>
+      <div class="h-64">
+        <canvas baseChart [data]="unitsOverTimeData" [options]="unitsOverTimeOptions" [type]="'line'"></canvas>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+      <div class="flex items-center justify-between pb-2 mb-2 border-b border-gray-200 dark:border-gray-700">
+        <h5 class="text-lg font-medium text-gray-900 dark:text-white">Category Mix</h5>
+      </div>
+      <div class="h-64">
+        <canvas baseChart [data]="categoryMixData" [options]="categoryMixOptions" [type]="'bar'"></canvas>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+      <div class="flex items-center justify-between pb-2 mb-2 border-b border-gray-200 dark:border-gray-700">
+        <h5 class="text-lg font-medium text-gray-900 dark:text-white">Brand Mix</h5>
+      </div>
+      <div class="h-64">
+        <canvas baseChart [data]="brandMixData" [options]="brandMixOptions" [type]="'bar'"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table card (colors like your sales details section) -->
+  <div class="bg-white dark:bg-white-100 shadow-md sm:rounded-lg overflow-hidden">
+    <div class="flex items-center justify-between p-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-600">Sales (Filtered)</h3>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left text-dark dark:text-dark-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-yellow-100 dark:text-gray-400">
+          <tr>
+            <th (click)="changeSort('date')" class="px-4 py-3 cursor-pointer">Date</th>
+            <th (click)="changeSort('transactionId')" class="px-4 py-3 cursor-pointer">Transaction ID</th>
+            <th class="px-4 py-3">Customer</th>
+            <th (click)="changeSort('category')" class="px-4 py-3 cursor-pointer">Category</th>
+            <th (click)="changeSort('brand')" class="px-4 py-3 cursor-pointer">Brand</th>
+            <th (click)="changeSort('model')" class="px-4 py-3 cursor-pointer">Model</th>
+            <th (click)="changeSort('qty')" class="px-4 py-3 cursor-pointer">Qty</th>
+            <th (click)="changeSort('gross')" class="px-4 py-3 cursor-pointer">Gross</th>
+            <th (click)="changeSort('discountAmt')" class="px-4 py-3 cursor-pointer">Discount</th>
+            <th (click)="changeSort('net')" class="px-4 py-3 cursor-pointer">Net</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y dark:divide-gray-700">
+          <tr *ngFor="let r of pagedRows()" class="hover:bg-gray-50">
+            <td class="px-4 py-3">{{ r.date }}</td>
+            <td class="px-4 py-3 font-medium text-dark-900">{{ r.transactionId || 'N/A' }}</td>
+            <td class="px-4 py-3">
+              {{ r.name || 'N/A' }}
+              <div class="text-xs text-gray-500">{{ r.phoneNumber || '' }}</div>
+            </td>
+            <td class="px-4 py-3">{{ r.category || 'N/A' }}</td>
+            <td class="px-4 py-3">{{ r.brand || 'N/A' }}</td>
+            <td class="px-4 py-3">{{ r.model || 'N/A' }}</td>
+            <td class="px-4 py-3">{{ r.qty || 0 }}</td>
+            <td class="px-4 py-3 font-semibold text-green-600">Rs. {{ r.gross | number }}</td>
+            <td class="px-4 py-3">Rs. {{ r.discountAmt | number }}</td>
+            <td class="px-4 py-3">Rs. {{ r.net | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination (theme-aligned) -->
+    <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+         aria-label="Table navigation">
+      <span class="text-sm font-normal text-dark-500 dark:text-dark-400">
+        Page {{ page }} / {{ totalPages() }}
+      </span>
+      <div class="inline-flex items-stretch -space-x-px">
+        <button (click)="prevPage()" [disabled]="page === 1"
+                class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                type="button">
+          Prev
+        </button>
+
+        <button (click)="nextPage()" [disabled]="page === totalPages()"
+                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed rounded-r-lg"
+                type="button">
+          Next
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <label class="text-sm">Rows</label>
+        <select [(ngModel)]="pageSize" (change)="page = 1"
+                class="border border-gray-300 rounded-lg px-2 py-1 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="25">25</option>
+          <option [ngValue]="50">50</option>
+        </select>
+      </div>
+    </nav>
+  </div>
+</section>
+
+

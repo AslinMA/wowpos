@@ -160,37 +160,54 @@
     </div>
   </div>
 
-  <!-- Quick Actions -->
-  <div class="w-full lg:w-1/3 bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4">
-    <h5 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Quick Actions</h5>
+<!-- Quick Actions Section -->
+<div class="w-full lg:w-1/3 bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4">
+  <h5 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Quick Actions</h5>
+  <div class="space-y-3 mb-6">
+    <button (click)="addNewStock()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg">+ Add New Stock</button>
+    <button (click)="goToNotification()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg">⚠️ View Low Stock Items</button>
+    <button (click)="goToSalesReports()" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg">📊 Sales Report</button>
+  </div>
+</div>
 
-    <div class="space-y-3 mb-6">
-      <button onclick="addNewStock()"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg">+ Add New
-        Stock</button>
-      <button onclick="viewLowStock()"
-        class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg">⚠️ View Low Stock
-        Items</button>
-      <button onclick="viewSalesReport()"
-        class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg">📊 Sales
-        Report</button>
+<!-- Sales Report Section (Initially Hidden) -->
+<div *ngIf="showSalesReport" class="w-full lg:w-2/3 bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4 mt-6">
+  <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Sales Report</h3>
+
+  <!-- Sales Overview -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+    <div class="flex justify-between">
+      <span class="text-sm font-semibold text-gray-800">Total Sales</span>
+      <span class="text-sm font-bold text-gray-800">Rs. {{ totalSales }}</span>
     </div>
-
-    <div class="border-t pt-4">
-      <h6 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Alerts</h6>
-      <div class="space-y-2">
-        <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
-          <span class="font-semibold">5 items</span> are running low on stock
-        </div>
-        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
-          <span class="font-semibold">3 items</span> haven't been sold in 30 days
-        </div>
-        <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-800">
-          <span class="font-semibold">Today's target</span> achieved 85%
-        </div>
-      </div>
+    <div class="flex justify-between">
+      <span class="text-sm font-semibold text-gray-800">Total Revenue</span>
+      <span class="text-sm font-bold text-gray-800">Rs. {{ totalRevenue }}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="text-sm font-semibold text-gray-800">Profit Margin</span>
+      <span class="text-sm font-bold text-gray-800">{{ profitMargin }}%</span>
     </div>
   </div>
+
+  <!-- Sales Chart -->
+  <div class="overflow-x-auto">
+    <canvas id="salesChart" baseChart [data]="salesChartData" [options]="salesChartOptions" [type]="'line'"></canvas>
+  </div>
+
+  <!-- Category-wise Sales -->
+  <div class="mt-6">
+    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Category-wise Sales</h4>
+    <canvas id="categorySalesChart" baseChart [data]="categorySalesData" [options]="categorySalesOptions" [type]="'bar'"></canvas>
+  </div>
+
+  <!-- Product Performance -->
+  <div class="mt-6">
+    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Product Performance</h4>
+    <canvas id="productPerformanceChart" baseChart [data]="productPerformanceData" [options]="productPerformanceOptions" [type]="'radar'"></canvas>
+  </div>
+</div>
+
 </div>
 
 <section class=" shadow-md sm:rounded-lg mt-10 bg-white-50 dark:bg-white-900 p-3 sm:p-5 mx-auto lg:mx-0 lg:ml-[300px] lg:mr-[30px]"

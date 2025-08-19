@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "^19.2.19",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",
@@ -20,7 +21,7 @@
     "apexcharts": "^3.54.1",
     "chart.js": "^4.5.0",
     "flowbite": "^3.1.2",
-    "ng2-charts": "^6.0.0",
+    "ng2-charts": "^6.0.1",
     "ngx-apexcharts": "^0.7.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

@@ -282,60 +282,73 @@ export class SellingComponent implements OnInit {
   }
   saveSalesData() {
     const transactionId = this.generateTransactionId();
-    // If multiple items, save each item separately
+
     if (this.itemsArray && this.itemsArray.length > 0) {
-      for (let item of this.itemsArray) {
-        const saleData = new sellDeatils(
-          item.id || 0,
-          this.deatils.name,
-          this.deatils.phoneNumber,
-          this.receiptData.date,
-          item.brand,
-          item.model,
-          item.category,
-          item.sellQuantity || 1,
-          ((+item.sellPrice * +item.sellQuantity) - (+item.discountPrice * +item.sellQuantity)) || 0,
-          item.sellPrice,
-          transactionId
-        );
+        const saleData = {
+            name: this.deatils.name,
+            phoneNumber: this.deatils.phoneNumber,
+            date: this.receiptData.date,
+            discountedPrice: this.calculateFinalTotal(),
+            sellPrice: this.calculateSubtotal(),
+            transactionId: transactionId,
+            items: this.itemsArray.map(item => ({
+                productId: item.id,
+                category: item.category,
+                brand: item.brand,
+                model: item.model,
+                quantity: item.sellQuantity,
+                discountedPrice: item.discountPrice,
+                sellPrice: item.sellPrice
+            }))
+        };
 
         this.http.post("http://localhost:8080/sale", saleData).subscribe({
-          next: (res) => {
-            console.log(`Sale saved for ${item.brand} ${item.model}`);
-            console.log("binded data discounted price " + ((+item.sellPrice * +item.sellQuantity) - (+item.discountPrice * +item.sellQuantity)));
-
-          },
-          error: (err) => {
-            console.error(`Error saving sale for ${item.brand} ${item.model}:`, err);
-          }
+            next: (res) => {
+                alert("All sales completed successfully!");
+                console.log("Sale response:", res);
+            },
+            error: (err) => {
+                console.error("Error saving sale:", err);
+                alert("Error occurred while saving sale data.");
+            }
         });
-      }
-      alert("All sales completed successfully!");
     } else {
-      // Single item sale
-      this.savedeatils.name = this.deatils.name;
-      this.savedeatils.id = this.items.id;
-      this.savedeatils.phoneNumber = this.deatils.phoneNumber;
-      this.savedeatils.date = this.receiptData.date;
-      this.savedeatils.brand = this.items.brand;
-      this.savedeatils.model = this.items.model;
-      this.savedeatils.quantity = this.quantity;
-      this.savedeatils.sellPrice = this.items.sellPrice;
-      this.savedeatils.discountedPrice = this.receiptData.finalTotal;
-      this.savedeatils.category = this.items.category;
-      this.savedeatils.transactionId = transactionId;
-      this.http.post("http://localhost:8080/sale", this.savedeatils).subscribe({
-        next: (res) => {
-          alert("Your selling was completed...!");
-          this.savedeatils = new sellDeatils(0, "", "", "", "", "", "", 0, 0, "", "");
-        },
-        error: (err) => {
-          console.error("Error saving sale:", err);
-          alert("Error occurred while saving sale data.");
-        }
-      });
+        // Single item sale fallback
+        const saleData = {
+            name: this.deatils.name,
+            phoneNumber: this.deatils.phoneNumber,
+            date: this.receiptData.date,
+            discountedPrice: this.receiptData.totalDiscount,
+            sellPrice: this.items.sellPrice,
+            transactionId: transactionId,
+            items: [
+                {
+                    productId: this.items.id,
+                    category: this.items.category,
+                    brand: this.items.brand,
+                    model: this.items.model,
+                    quantity: this.quantity,
+                    discountedPrice: this.deatils.discountPrice,
+                    sellPrice: this.items.sellPrice
+                }
+            ]
+        };
+
+        this.http.post("http://localhost:8080/sale", saleData).subscribe({
+            next: (res) => {
+                alert("Your selling was completed...!");
+                console.log("this is ell dat of single dataset"+saleData);
+                
+                console.log("Sale response:", res);
+            },
+            error: (err) => {
+                console.error("Error saving sale:", err);
+                alert("Error occurred while saving sale data.");
+            }
+        });
     }
-  }
+}
+
 
   closeReceipt() {
     this.showReceipt = false;
