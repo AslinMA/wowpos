@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { addItems } from '../../models/addItems';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
+
+
 
 @Component({
   selector: 'app-add-items',
@@ -31,7 +34,7 @@ export class AddItemsComponent implements OnInit {
 
   // Load categories from backend
   loadCategories() {
-    this.http.get<string[]>('/api/categories').subscribe({
+    this.http.get<string[]>('${environment.apiUrl}/api/categories').subscribe({
       next: (data) => {
         this.categories = data;
         console.log('Categories loaded:', data);
@@ -44,7 +47,7 @@ export class AddItemsComponent implements OnInit {
 
   // Load brands from backend
   loadBrands() {
-    this.http.get<string[]>('/api/brands').subscribe({
+    this.http.get<string[]>('${environment.apiUrl}/api/brands').subscribe({
       next: (data) => {
         this.brands = data;
         console.log('Brands loaded:', data);
@@ -57,7 +60,7 @@ export class AddItemsComponent implements OnInit {
 
   // Load locations from backend
   loadLocations() {
-    this.http.get<string[]>('/api/locations').subscribe({
+    this.http.get<string[]>('${environment.apiUrl}/api/locations').subscribe({
       next: (data) => {
         this.locations = data;
         console.log('Locations loaded:', data);
@@ -89,7 +92,7 @@ export class AddItemsComponent implements OnInit {
 
   // Load models filtered by brand
   loadModelsByBrand(brand: string) {
-    this.http.get<string[]>(`/api/models-by-brand?brand=${brand}`).subscribe({
+    this.http.get<string[]>(`${environment.apiUrl}/api/models-by-brand?brand=${brand}`).subscribe({
       next: (data) => {
         this.models = data;
         console.log(`Models loaded for ${brand}:`, data);
@@ -119,7 +122,7 @@ export class AddItemsComponent implements OnInit {
     }
 
     // Submit to backend
-    this.http.post('/api/product', this.items).subscribe({
+    this.http.post('${environment.apiUrl}/api/product', this.items).subscribe({
       next: (res) => {
         alert("Your Item Was Added Successfully!");
         // Reset form

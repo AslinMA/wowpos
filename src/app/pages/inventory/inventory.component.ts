@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SharedDataService } from '../shared-data.service';
 import { sharedCartDataService } from '../SharedCartDataService';
+import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'app-inventory',
@@ -54,7 +56,7 @@ export class InventoryComponent implements OnInit {
   }
 
   getProducts(): void {
-    this.http.get<addItems[]>('/api/product')
+    this.http.get<addItems[]>('${environment.apiUrl}/api/product')
       .subscribe(
         data => {
           this.products = data;
@@ -279,7 +281,7 @@ openRestockPrompt(item: addItems): void {
 }
 
 restockItem(item: addItems, qty: number): void {
-  this.http.post(`/api/product/${item.id}/restock?qty=${qty}`, {})
+  this.http.post(`${environment.apiUrl}/api/product/${item.id}/restock?qty=${qty}`, {})
     .subscribe({
       next: () => {
         item.quantity = (item.quantity || 0) + qty;
