@@ -279,7 +279,7 @@ openRestockPrompt(item: addItems): void {
 }
 
 restockItem(item: addItems, qty: number): void {
-  this.http.post(`http://localhost:8080/api/product/${item.id}/restock?qty=${qty}`, {})
+  this.http.post(`/api/product/${item.id}/restock?qty=${qty}`, {})
     .subscribe({
       next: () => {
         item.quantity = (item.quantity || 0) + qty;
