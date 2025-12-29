@@ -56,7 +56,7 @@ export class InventoryComponent implements OnInit {
   }
 
   getProducts(): void {
-    this.http.get<addItems[]>('${environment.apiUrl}/api/product')
+    this.http.get<addItems[]>(`${environment.apiUrl}/api/product` )
       .subscribe(
         data => {
           this.products = data;
