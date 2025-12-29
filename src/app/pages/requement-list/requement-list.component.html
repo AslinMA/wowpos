@@ -1,134 +1,181 @@
-<section class="mt-10 bg-white-50 dark:bg-white-900 p-3 sm:p-5 mx-auto lg:ml-[300px] lg:mr-[30px]">
-    <h1 class="text-3xl font-medium mb-5 dark:text-gray-600">Requirements Page</h1>
+<section class="mt-10 bg-white-50 dark:bg-white-900 p-3 sm:p-5 mx-auto mx-auto max-w-7xl
+">
+  <h1 class="text-3xl font-medium mb-5 dark:text-gray-600">Requirements Page</h1>
 
-    <!-- Input Form -->
-    <div class="bg-white dark:bg-white-100 shadow-md sm:rounded-lg p-6 mb-8">
-        <form class="grid grid-cols-1 md:grid-cols-2 gap-6" #requirementForm="ngForm">
+  <!-- Input Form -->
+  <div class="bg-white dark:bg-white-100 shadow-md sm:rounded-lg p-6 mb-8">
+    <form class="grid grid-cols-1 md:grid-cols-2 gap-6" #requirementForm="ngForm" (ngSubmit)="addItem()">
 
-            <!-- Require Date -->
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600">Require Date</label>
-                <input type="date"
-                    class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                    name="date"  required />
-            </div>
+      <!-- Require Date -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600" for="date">Require Date</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          [(ngModel)]="form.date"
+          required
+          class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"/>
+      </div>
 
-            <!-- Category -->
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600">Category</label>
-                <input list="categoryOptions"
-                    class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                    name="category" placeholder="Display" required />
-                <datalist id="categoryOptions">
-                    <option value="Display"></option>
-                    <option value="Temperd"></option>
-                    <option value="Handfree"></option>
-                    <option value="Mic"></option>
-                    <option value="Charger"></option>
-                </datalist>
-            </div>
+      <!-- Category -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600" for="category">Category</label>
+        <input
+          list="categoryOptions"
+          id="category"
+          name="category"
+          [(ngModel)]="form.category"
+          placeholder="Display"
+          required
+          class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"/>
+        <datalist id="categoryOptions">
+          <option value="Display"></option>
+          <option value="Tempered"></option>
+          <option value="Handsfree"></option>
+          <option value="Mic"></option>
+          <option value="Charger"></option>
+        </datalist>
+      </div>
 
-            <!-- Brand -->
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600">Brand</label>
-                <input list="brandOptions"
-                    class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                    name="brand" placeholder="Apple" required />
-                <datalist id="brandOptions">
-                    <option value="Apple"></option>
-                    <option value="Samsung"></option>
-                    <option value="Redmi"></option>
-                    <option value="Nokia"></option>
-                </datalist>
-            </div>
+      <!-- Brand -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600" for="brand">Brand</label>
+        <input
+          list="brandOptions"
+          id="brand"
+          name="brand"
+          [(ngModel)]="form.brand"
+          placeholder="Apple"
+          required
+          class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"/>
+        <datalist id="brandOptions">
+          <option value="Apple"></option>
+          <option value="Samsung"></option>
+          <option value="Redmi"></option>
+          <option value="Nokia"></option>
+        </datalist>
+      </div>
 
-            <!-- Model -->
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600">Model</label>
-                <input list="modelOptions"
-                    class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                    name="model" placeholder="iPhone 6" required />
-                <datalist id="modelOptions">
-                    <!-- Apple -->
-                    <option value="iPhone 6">iPhone 6</option>
-                    <option value="iPhone 6s">iPhone 6s</option>
-                    <option value="iPhone 6 Plus">iPhone 6 Plus</option>
-                    <option value="iPhone 7">iPhone 7</option>
-                    <option value="iPhone X">iPhone X</option>
+      <!-- Model -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600" for="model">Model</label>
+        <input
+          list="modelOptions"
+          id="model"
+          name="model"
+          [(ngModel)]="form.model"
+          placeholder="iPhone 6"
+          required
+          class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"/>
+        <datalist id="modelOptions">
+          <!-- Apple -->
+          <option value="iPhone 6">iPhone 6</option>
+          <option value="iPhone 6s">iPhone 6s</option>
+          <option value="iPhone 6 Plus">iPhone 6 Plus</option>
+          <option value="iPhone 7">iPhone 7</option>
+          <option value="iPhone X">iPhone X</option>
+          <!-- Samsung -->
+          <option value="Galaxy S21">Galaxy S21</option>
+          <option value="Galaxy Note 10">Galaxy Note 10</option>
+          <option value="Galaxy A52">Galaxy A52</option>
+          <!-- Redmi -->
+          <option value="Note 9">Note 9</option>
+          <option value="Note 10 Pro">Note 10 Pro</option>
+          <option value="Redmi 12C">Redmi 12C</option>
+          <!-- Nokia -->
+          <option value="Nokia 6.1">Nokia 6.1</option>
+          <option value="Nokia 7.2">Nokia 7.2</option>
+          <option value="Nokia 3.4">Nokia 3.4</option>
+        </datalist>
+      </div>
 
-                    <!-- Samsung -->
-                    <option value="Galaxy S21">Galaxy S21</option>
-                    <option value="Galaxy Note 10">Galaxy Note 10</option>
-                    <option value="Galaxy A52">Galaxy A52</option>
+      <!-- Quantity -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600" for="quantity">Quantity</label>
+        <input
+          type="number"
+          id="quantity"
+          name="quantity"
+          [(ngModel)]="form.quantity"
+          min="1"
+          placeholder="10"
+          required
+          class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"/>
+      </div>
 
-                    <!-- Redmi -->
-                    <option value="Note 9">Note 9</option>
-                    <option value="Note 10 Pro">Note 10 Pro</option>
-                    <option value="Redmi 12C">Redmi 12C</option>
+      <!-- Price (optional) -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600" for="price">Price (optional)</label>
+        <input
+          type="number"
+          id="price"
+          name="price"
+          [(ngModel)]="form.price"
+          min="0"
+          placeholder="2500"
+          class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"/>
+      </div>
 
-                    <!-- Nokia -->
-                    <option value="Nokia 6.1">Nokia 6.1</option>
-                    <option value="Nokia 7.2">Nokia 7.2</option>
-                    <option value="Nokia 3.4">Nokia 3.4</option>
+      <!-- Notes / Description -->
+      <div class="md:col-span-2">
+        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600" for="notes">Description</label>
+        <textarea
+          rows="3"
+          id="notes"
+          name="notes"
+          [(ngModel)]="form.notes"
+          placeholder="Details"
+          class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"></textarea>
+      </div>
 
-                </datalist>
-            </div>
+      <!-- Add Button -->
+      <div class="md:col-span-2 mt-2 flex justify-end">
+        <button type="submit"
+          class="flex items-center justify-center text-dark bg-yellow-500 hover:bg-yellow-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-6 py-2">
+          <svg class="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
+          </svg>
+          Add Requirement
+        </button>
+      </div>
+    </form>
+  </div>
 
-            <!-- Quantity -->
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600">Quantity</label>
-                <input type="number"
-                    class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                    name="quantity" placeholder="10" required />
-            </div>
-
-            <!-- Description -->
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-600">Description</label>
-                <textarea rows="3"
-                    class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                    name="description" placeholder="Details"
-                    required></textarea>
-            </div>
-        </form>
-
-        <!-- Add Button -->
-        <div class="mt-6 flex justify-end">
-            <button
-                class="flex items-center justify-center text-dark bg-yellow-500 hover:bg-yellow-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-6 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
-                >
-                <svg class="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
-                </svg>
-                Add Requirement
-            </button>
-        </div>
-    </div>
-
-    <!-- Table Display -->
-    <div class="bg-white dark:bg-white-100 shadow-md sm:rounded-lg overflow-x-auto">
-        <table class="w-full text-sm text-left text-dark dark:text-dark-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th class="px-6 py-3">Date</th>
-                    <th class="px-6 py-3">Category</th>
-                    <th class="px-6 py-3">Brand</th>
-                    <th class="px-6 py-3">Model</th>
-                    <th class="px-6 py-3">Quantity</th>
-                    <th class="px-6 py-3">Description</th>
-                </tr>
-            </thead>
-            <tbody >
-                <tr 
-                    class="border-b dark:border-gray-700 ">
-                    <td class="px-6 py-4">2005.06.06</td>
-                    <td class="px-6 py-4">Display</td>
-                    <td class="px-6 py-4">Apple</td>
-                    <td class="px-6 py-4">Iphone 6s</td>
-                    <td class="px-6 py-4">10</td>
-                    <td class="px-6 py-4">outside selling for the x phoneshop</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <!-- Dynamic Table -->
+  <div class="bg-white dark:bg-white-100 shadow-md sm:rounded-lg overflow-x-auto">
+    <table class="min-w-full text-sm text-left text-gray-600">
+      <thead class="text-xs uppercase bg-gray-50">
+        <tr>
+          <th class="px-3 py-2">#</th>
+          <th class="px-3 py-2">Date</th>
+          <th class="px-3 py-2">Category</th>
+          <th class="px-3 py-2">Brand</th>
+          <th class="px-3 py-2">Model</th>
+          <th class="px-3 py-2">Qty</th>
+          <th class="px-3 py-2">Price</th>
+          <th class="px-3 py-2">Notes</th>
+          <th class="px-3 py-2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of items; index as i; trackBy: trackByIndex" class="border-b">
+          <td class="px-3 py-2">{{ i + 1 }}</td>
+          <td class="px-3 py-2">{{ r.date }}</td>
+          <td class="px-3 py-2">{{ r.category }}</td>
+          <td class="px-3 py-2">{{ r.brand }}</td>
+          <td class="px-3 py-2">{{ r.model }}</td>
+          <td class="px-3 py-2">{{ r.quantity }}</td>
+          <td class="px-3 py-2">{{ r.price ?? '-' }}</td>
+          <td class="px-3 py-2">{{ r.notes ?? '-' }}</td>
+          <td class="px-3 py-2 text-right">
+            <button class="px-2 py-1 rounded bg-red-600 text-white" (click)="remove(i)">Remove</button>
+          </td>
+        </tr>
+        <tr *ngIf="items.length === 0">
+          <td class="px-3 py-4" colspan="9">No items yet</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </section>

@@ -1,21 +1,17 @@
 <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar"
    type="button"
    class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:focus:ring-gray-600">
-   <span class="sr-only">Open sidebar</span>
-   <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-      <path clip-rule="evenodd" fill-rule="evenodd"
-         d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
-      </path>
-   </svg>
+
 </button>
 
 <aside id="default-sidebar"
-   class="fixed top-16 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
-   aria-label="Sidebar">
+   class="fixed top-20 left-0 z-40 w-64 h-screen transition-transform -translate-x-full lg:translate-x-0"
+   [class.-translate-x-full]="!isSidebarOpen" aria-label="Sidebar">
    <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-yellow-200">
       <ul class="space-y-2 font-medium">
          <li>
-            <a (click)="goToAdmin()" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
+            <a (click)="goToAdmin()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
                <svg
                   class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
                   aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
@@ -28,20 +24,34 @@
             </a>
          </li>
          <li>
-            <a (click)="goToInventory()" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
+            <a (click)="goToInventory()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
                <svg
                   class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
                   aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
                   <path
                      d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
                </svg>
-               <span class="flex-1 ms-3 whitespace-nowrap">Inventory</span>
+               <span class="flex-1 ms-3 whitespace-nowrap">Inventory & Selling</span>
                <span
                   class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Pro</span>
             </a>
          </li>
          <li>
-            <a (click)="goToNotification()" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
+            <a (click)="goToRepair()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100 group">
+               <svg
+                  class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
+                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                     d="M18.5 0a1.5 1.5 0 0 1 1.493 1.356L20 1.5v3a1.5 1.5 0 0 1-1.356 1.493L18.5 6h-.585l-2.793 2.793a1 1 0 0 1-1.497-1.32l.083-.094L16.5 4.585V1.5A1.5 1.5 0 0 1 17.856.007L18.5 0Zm-6.207 5.086a1 1 0 0 1 0 1.414l-8.5 8.5a3 3 0 0 1-4.242 0 3 3 0 0 1 0-4.243l8.5-8.5a1 1 0 0 1 1.414 0l2.828 2.829Zm-9.192 8.192a1 1 0 1 0-1.415 1.415 1 1 0 0 0 1.415-1.415Z" />
+               </svg>
+               <span class="flex-1 ms-3 whitespace-nowrap">Repair</span>
+            </a>
+         </li>
+         <li>
+            <a (click)="goToNotification()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
                <svg
                   class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
                   aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -53,19 +63,10 @@
                   class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
             </a>
          </li>
-         <!-- <li>
-            <a (click)="goToSelling()" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
-               <svg
-                  class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
-                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-                  <path
-                     d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z" />
-               </svg>
-               <span class="flex-1 ms-3 whitespace-nowrap">Selling</span>
-            </a>
-         </li> -->
+       
          <li>
-            <a (click)="goToAddItems()" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
+            <a (click)="goToAddItems()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
                <svg
                   class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
                   width="64" height="64" viewBox="0 0 64 64" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -86,9 +87,9 @@
             </a>
          </li>
          <li>
-            <a (click)="goToRequement()" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
-               <svg
-                  fill="currentColor"
+            <a (click)="goToRequement()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
+               <svg fill="currentColor"
                   class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
                   id="Repair_Service" data-name="Repair Service" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                   <path
@@ -118,8 +119,50 @@
                <span class="flex-1 ms-3 whitespace-nowrap">Requement</span>
             </a>
          </li>
+      
          <li>
-            <a (click)="goTologin()" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
+            <a (click)="goToDamage()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100 group">
+               <svg
+                  class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
+                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                     d="M10 0a1 1 0 0 1 .993.883L11 1v1h3a3 3 0 0 1 2.995 2.824L17 5v10a3 3 0 0 1-2.824 2.995L14 18H6a3 3 0 0 1-2.995-2.824L3 15V5a3 3 0 0 1 2.824-2.995L6 2h3V1a1 1 0 0 1 1.993-.117L11 1V0h-1Zm-2.5 8.5-1.5 1.5 1.5 1.5L6 13l-1.5-1.5L3 13l1.5-1.5L3 10l1.5-1.5L6 10l1.5-1.5Zm7 0L13 10l1.5 1.5L13 13l1.5 1.5L16 13l-1.5-1.5L16 10l-1.5-1.5Z" />
+                  <path d="M8 14h4v2H8v-2Z" fill="currentColor" opacity="0.6" />
+               </svg>
+               <span class="flex-1 ms-3 whitespace-nowrap">Damage</span>
+            </a>
+         </li>
+
+         <li>
+            <a (click)="goToReturn()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100 group">
+               <svg
+                  class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
+                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                     d="M3 10a1 1 0 0 1 .707.293l2 2a1 1 0 1 1-1.414 1.414L1.586 11H11a6 6 0 0 1 0 12H9a1 1 0 1 1 0-2h2a4 4 0 0 0 0-8H1.586l2.707 2.707A1 1 0 1 1 2.879 17.12l-2-2A1 1 0 0 1 .586 14.707l2-2A1 1 0 0 1 3 12.293V10Z" />
+                  <path d="M11 1a6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4H9a1 1 0 0 1 0-2h2Z" />
+               </svg>
+               <span class="flex-1 ms-3 whitespace-nowrap">Return</span>
+            </a>
+         </li>
+            <li>
+            <a (click)="goToModels()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100 group">
+               <svg
+                  class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
+                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                     d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h2V4a2 2 0 0 1 2-2H4ZM8 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H8Zm3 5a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2h-2a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2h-2a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2h-2a1 1 0 0 1-1-1Z" />
+               </svg>
+               <span class="flex-1 ms-3 whitespace-nowrap">Models</span>
+            </a>
+         </li>
+
+         <li>
+            <a (click)="goTologin()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
                <svg
                   class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
                   aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
@@ -130,7 +173,8 @@
             </a>
          </li>
          <li>
-            <a (click)="goToSingUp()" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
+            <a (click)="goToSingUp()"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-dark hover:bg-gray-100  group">
                <svg
                   class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-dark"
                   aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -146,3 +190,7 @@
       </ul>
    </div>
 </aside>
+<!-- Overlay for mobile when sidebar is open -->
+<div *ngIf="isSidebarOpen" (click)="toggleSidebar()" class="fixed inset-0 z-30 bg-gray-900 bg-opacity-50 lg:hidden"
+   aria-hidden="true">
+</div>

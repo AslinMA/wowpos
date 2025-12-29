@@ -5,9 +5,18 @@ import { HttpClient } from '@angular/common/http';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
 
-// NOTE: keeping your original model import
+// keep your original model import
 import { sellDeatils } from '../../models/sellDeatils';
 import { Router } from '@angular/router';
+
+interface WeeklyPoint { date: string; revenue: number; items: number; }
+interface WeeklyTotal { 
+  totalRevenue: number; 
+  totalItems: number; 
+  growthPercentage: number;
+  startDate: string;
+  endDate: string;
+}
 
 @Component({
   selector: 'app-admin',
@@ -18,13 +27,15 @@ import { Router } from '@angular/router';
 })
 export class AdminComponent implements OnInit {
   // --- Top KPIs ---
-  totalSales: number = 0; // count of orders/rows (or sum of quantities if you prefer)
-  totalRevenue: number = 0; // Rs. sum of discountedPrice
-  profitMargin: number = 28; // placeholder until COGS available
+  totalSalesThisWeek: number = 0;  // NEW: Weekly revenue from backend
+  weeklyGrowth: number = 0;         // NEW: Week-over-week growth %
+  totalSales: number = 0;           // count of orders/rows (or sum of quantities if you prefer)
+  totalRevenue: number = 0;         // Rs. sum of discountedPrice
+  profitMargin: number = 28;        // placeholder until COGS available
   todayRevenue: number = 0;
 
   // --- Cards data (keep names to match your template) ---
-  totals: { [product: string]: number } = {}; // all-time by category (qty)
+  totals: { [product: string]: number } = {};              // all-time by category (qty)
   dattoDaytotalsByCatogory: { [product: string]: number } = {}; // today by category (qty)
   totalAmmuntOfDayByDay: { [date: string]: number } = {}; // daily revenue time series
 
@@ -58,16 +69,81 @@ export class AdminComponent implements OnInit {
   itemsPerPage = 10;
   totalSalesItems = 0;
   totalSalesPages = 0;
+  
 
-  // --- Charts (Top Sales Chart) ---
-  public chartType: 'bar' = 'bar';
-  public chartData: ChartData<'bar'> = { labels: [], datasets: [] };
-  public chartOptions: ChartOptions<'bar'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: { x: { ticks: { autoSkip: true } }, y: { beginAtZero: true } }
-  };
+  // --- Daily Sales Chart (LINE) ---
+public dailySalesChartData: ChartData<'line'> = {
+  labels: [],
+  datasets: []
+};
+
+public dailySalesChartOptions: ChartOptions<'line'> = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: true,
+      position: 'top'
+    },
+    tooltip: {
+      mode: 'index',
+      intersect: false,
+      callbacks: {
+        label: function(context) {
+          let label = context.dataset.label || '';
+          if (label) {
+            label += ': ';
+          }
+          if (context.parsed.y !== null) {
+            label += 'Rs. ' + context.parsed.y.toLocaleString();
+          }
+          return label;
+        }
+      }
+    }
+  },
+  scales: {
+    x: {
+      display: true,
+      title: {
+        display: true,
+        text: 'Date'
+      },
+      grid: {
+        display: false
+      }
+    },
+    y: {
+      display: true,
+      title: {
+        display: true,
+        text: 'Revenue (Rs.)'
+      },
+      beginAtZero: true,
+      ticks: {
+        callback: function(value) {
+          return 'Rs. ' + value.toLocaleString();
+        }
+      }
+    }
+  },
+  interaction: {
+    mode: 'nearest',
+    axis: 'x',
+    intersect: false
+  }
+};
+
+  // --- Top Sales Chart (BAR) ---
+public chartType: 'bar' = 'bar';
+public chartData: ChartData<'bar'> = { labels: [], datasets: [] };
+public chartOptions: ChartOptions<'bar'> = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: { x: { ticks: { autoSkip: true } }, y: { beginAtZero: true } }
+};
+
 
   // --- Sales Report (shown when toggled) ---
   showSalesReport: boolean = false;
@@ -78,18 +154,50 @@ export class AdminComponent implements OnInit {
   productPerformanceData: ChartData<'radar'> = { labels: [], datasets: [] };
   productPerformanceOptions: ChartOptions<'radar'> = { responsive: true, maintainAspectRatio: false };
 
-  constructor(private http: HttpClient,public router: Router) { }
+  constructor(private http: HttpClient, public router: Router) {}
 
   // ---------------- Lifecycle ---------------- //
   ngOnInit(): void {
     this.loadSalesDetails();
+    this.loadWeeklySales();     // fills the top bar chart from backend
+    this.loadWeeklyTotal();      // NEW: loads weekly total revenue & growth
   }
 
   // ---------------- Data Fetch ---------------- //
-  loadSalesDetails(): void {
-    this.http.get<sellDeatils[]>(`http://localhost:8080/saler-retrive`).subscribe({
+  private loadWeeklySales(): void {
+    this.http.get<WeeklyPoint[]>('http://localhost:8080/api/admin/metrics/weekly-sales').subscribe({
+      next: (rows) => {
+        const labels = (rows || []).map(r => r.date);
+        const data = (rows || []).map(r => r.revenue);
+        this.chartData = { labels, datasets: [{ data, label: 'Revenue' }] };
+      },
+      error: (e) => {
+        console.warn('weekly-sales failed; falling back to local compute', e);
+        this.buildTopChartFromLocalIfNeeded();
+      }
+    });
+  }
+
+  // NEW: Load weekly total from backend
+  private loadWeeklyTotal(): void {
+    this.http.get<WeeklyTotal>('http://localhost:8080/api/admin/metrics/weekly-total').subscribe({
       next: (data) => {
-        this.salesDetails = (data || []).filter(Boolean);
+        this.totalSalesThisWeek = data.totalRevenue || 0;
+        this.weeklyGrowth = data.growthPercentage || 0;
+        console.log('Weekly total:', data);
+      },
+      error: (err) => {
+        console.error('Error loading weekly total:', err);
+        this.totalSalesThisWeek = 0;
+        this.weeklyGrowth = 0;
+      }
+    });
+  }
+
+  loadSalesDetails(): void {
+    this.http.get<sellDeatils[]>('http://localhost:8080/api/saler-retrive').subscribe({
+      next: (data) => {
+       this.salesDetails = (data || []);
         this.recomputeAll();
       },
       error: (err) => {
@@ -106,20 +214,12 @@ export class AdminComponent implements OnInit {
     this.applyFilters();
     this.computeKPIsAndSeries();
     this.updatePagination();
-    this.buildTopChart();
+    this.buildTopChartFromLocalIfNeeded();
   }
 
- addNewStock(): void {
-  this.router.navigate(['/add-items']);
-}
-goToSalesReports(): void {
-  this.router.navigate(['/sales-reports']);
-}
-goToNotification(): void {
-    this.router.navigate(['/notification']);
-  }
-
-
+  addNewStock(): void { this.router.navigate(['/add-items']); }
+  goToSalesReports(): void { this.router.navigate(['/sales-reports']); }
+  goToNotification(): void { this.router.navigate(['/notification']); }
 
   // ---------------- Filters ---------------- //
   updateFilterOptions(): void {
@@ -196,7 +296,7 @@ goToNotification(): void {
       const categoryMatch = this.selectedCategories.length === 0 || (sale.category && this.selectedCategories.includes(sale.category));
       const modelMatch = this.selectedModels.length === 0 || (sale.model && this.selectedModels.includes(sale.model));
       const dateMatch = sale.date ? this.isDateInRange(sale.date) : true;
-      const priceNum = sale.discountedPrice ?? (sale as any).sellPrice ?? 0; // support both fields
+      const priceNum = sale.discountedPrice ?? (sale as any).sellPrice ?? 0;
       const priceMatch = this.isPriceInRange(Number(priceNum));
 
       return searchMatch && brandMatch && categoryMatch && modelMatch && dateMatch && priceMatch;
@@ -209,56 +309,204 @@ goToNotification(): void {
   }
 
   // ---------------- KPIs + Series ---------------- //
-  private computeKPIsAndSeries(): void {
-    // reset
-    this.totals = {};
-    this.dattoDaytotalsByCatogory = {};
-    this.totalAmmuntOfDayByDay = {};
-    this.todayRevenue = 0;
+ private computeKPIsAndSeries(): void {
+  // reset
+  this.totals = {};
+  this.dattoDaytotalsByCatogory = {};
+  this.totalAmmuntOfDayByDay = {};
+  this.todayRevenue = 0;
 
-    const todayStr = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
-    let totalRevenue = 0;
+  const todayStr = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
+  let totalRevenue = 0;
 
-    for (const sale of this.salesDetails) {
-      const qty = Number(sale.quantity || 0);
-      const revenue = Number(sale.discountedPrice ?? (sale as any).sellPrice ?? 0);
-      const category = sale.category || 'Unknown';
+  console.log('=== Computing KPIs ===');
+  console.log('Total sales records:', this.salesDetails.length);
 
-      // all-time by category (qty)
-      this.totals[category] = (this.totals[category] || 0) + qty;
+  for (const sale of this.salesDetails) {
+    // FIX: Parse strings to numbers properly
+    const qty = Number(sale.quantity) || 0;
+    const discountedPrice = Number(sale.discountedPrice) || 0;
+    const sellPrice = Number(sale.sellPrice) || 0;
+    
+    // Use discountedPrice if available, otherwise sellPrice
+    const pricePerUnit = discountedPrice > 0 ? discountedPrice : sellPrice;
+    
+    // Calculate total revenue for this sale (price * quantity)
+    const saleRevenue = pricePerUnit * qty;
+    
+    const category = sale.category || 'Unknown';
 
-      // today by category (qty) + today revenue
-      const saleDateStr = (sale.date || '').split('T')[0];
-      if (saleDateStr === todayStr) {
-        this.dattoDaytotalsByCatogory[category] = (this.dattoDaytotalsByCatogory[category] || 0) + qty;
-        this.todayRevenue += revenue;
-      }
+    console.log(`Sale: ${sale.name}, Price: ${pricePerUnit}, Qty: ${qty}, Revenue: ${saleRevenue}`);
 
-      // day-by-day revenue series
-      const key = sale.date ? new Date(sale.date).toISOString().slice(0, 10) : 'Unknown';
-      this.totalAmmuntOfDayByDay[key] = (this.totalAmmuntOfDayByDay[key] || 0) + revenue;
+    // all-time by category (qty)
+    this.totals[category] = (this.totals[category] || 0) + qty;
 
-      totalRevenue += revenue;
+    // today by category (qty) + today revenue
+    const saleDateStr = (sale.date || '').split('T')[0];
+    if (saleDateStr === todayStr) {
+      this.dattoDaytotalsByCatogory[category] = (this.dattoDaytotalsByCatogory[category] || 0) + qty;
+      this.todayRevenue += saleRevenue;
     }
 
-    // Set top KPIs
-    this.totalRevenue = totalRevenue;
-    this.totalSales = this.salesDetails.length; // or sum of qty if preferred
+    // day-by-day revenue series
+    const key = sale.date ? new Date(sale.date).toISOString().slice(0, 10) : 'Unknown';
+    this.totalAmmuntOfDayByDay[key] = (this.totalAmmuntOfDayByDay[key] || 0) + saleRevenue;
+
+    totalRevenue += saleRevenue;
   }
 
-  private buildTopChart(): void {
-    // Ensure deterministic chronological order
+  // Set top KPIs
+  this.totalRevenue = totalRevenue;
+  this.totalSales = this.salesDetails.length; // or sum of qty if preferred
+  
+  console.log('=== Final KPIs ===');
+  console.log('Total Revenue:', this.totalRevenue);
+  console.log('Today Revenue:', this.todayRevenue);
+  console.log('Total Sales:', this.totalSales);
+}
+
+
+  // If weekly API failed, build the chart from locally computed series
+// Build both charts from locally computed series
+private buildTopChartFromLocalIfNeeded(): void {
+  if ((this.chartData.labels?.length || 0) > 0) {
+    // Weekly chart already filled by API
+  } else {
+    // Fallback: build from local data
     const labels = Object.keys(this.totalAmmuntOfDayByDay).sort((a, b) => a.localeCompare(b));
     const dataOfChart = labels.map((d) => this.totalAmmuntOfDayByDay[d]);
-    this.chartData = { labels, datasets: [{ data: dataOfChart, label: 'sale' }] };
+    this.chartData = { labels, datasets: [{ data: dataOfChart, label: 'Revenue' }] };
   }
 
-  // ---------------- Sales Report toggle + demo data ---------------- //
+  // Always build daily sales chart from local data
+  this.buildDailySalesChart();
+}
+
+// NEW METHOD: Build daily sales chart
+private buildDailySalesChart(): void {
+  // Get last 7 days
+  const today = new Date();
+  const last7Days: string[] = [];
+  
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    last7Days.push(date.toISOString().slice(0, 10));
+  }
+
+  // Prepare data for each day
+  const revenueData: number[] = [];
+  const itemsData: number[] = [];
+  const labels: string[] = [];
+
+  for (const dateStr of last7Days) {
+    const revenue = this.totalAmmuntOfDayByDay[dateStr] || 0;
+    
+    // Count items sold on this day
+    let itemCount = 0;
+    for (const sale of this.salesDetails) {
+      const saleDateStr = (sale.date || '').split('T')[0];
+      if (saleDateStr === dateStr) {
+        itemCount += Number(sale.quantity || 0);
+      }
+    }
+
+    revenueData.push(revenue);
+    itemsData.push(itemCount);
+    
+    // Format date for display (e.g., "Dec 1")
+    const date = new Date(dateStr);
+    const formatted = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    labels.push(formatted);
+  }
+
+  // Build chart data
+  this.dailySalesChartData = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Revenue (Rs.)',
+        data: revenueData,
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointBackgroundColor: 'rgb(59, 130, 246)',
+        yAxisID: 'y'
+      },
+      {
+        label: 'Items Sold',
+        data: itemsData,
+        borderColor: 'rgb(16, 185, 129)',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointBackgroundColor: 'rgb(16, 185, 129)',
+        yAxisID: 'y1'
+      }
+    ]
+  };
+
+  // Update options to support dual Y-axis
+  this.dailySalesChartOptions = {
+    ...this.dailySalesChartOptions,
+    scales: {
+      x: {
+        display: true,
+        title: {
+          display: true,
+          text: 'Date'
+        },
+        grid: {
+          display: false
+        }
+      },
+      y: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+        title: {
+          display: true,
+          text: 'Revenue (Rs.)'
+        },
+        beginAtZero: true,
+        ticks: {
+          callback: function(value) {
+            return 'Rs. ' + value.toLocaleString();
+          }
+        }
+      },
+      y1: {
+        type: 'linear',
+        display: true,
+        position: 'right',
+        title: {
+          display: true,
+          text: 'Items Sold'
+        },
+        beginAtZero: true,
+        grid: {
+          drawOnChartArea: false
+        }
+      }
+    }
+  };
+
+  console.log('Daily sales chart built:', this.dailySalesChartData);
+}
+
+
+  // ---------------- Sales Report toggle + charts ---------------- //
   viewSalesReport(): void {
     this.showSalesReport = !this.showSalesReport;
     if (!this.showSalesReport) return;
 
-    // Build report charts from current filtered data (replace demo when backend available)
     // Line: revenue over time (filtered dataset)
     const byDate: Record<string, number> = {};
     for (const s of this.filteredSalesDetails) {
@@ -267,7 +515,10 @@ goToNotification(): void {
       byDate[k] = (byDate[k] || 0) + rev;
     }
     const dates = Object.keys(byDate).sort();
-    this.salesChartData = { labels: dates, datasets: [{ label: 'Revenue (Rs.)', data: dates.map((d) => byDate[d]), borderWidth: 2, fill: false }] };
+    this.salesChartData = {
+      labels: dates,
+      datasets: [{ label: 'Revenue (Rs.)', data: dates.map((d) => byDate[d]), borderWidth: 2, fill: false }]
+    };
 
     // Bar: category-wise revenue
     const byCat: Record<string, number> = {};
@@ -279,7 +530,7 @@ goToNotification(): void {
     const cats = Object.keys(byCat);
     this.categorySalesData = { labels: cats, datasets: [{ label: 'Category Sales (Rs.)', data: cats.map((c) => byCat[c]) }] };
 
-    // Radar: fake KPI like quantity by category (can change to margin/perf)
+    // Radar: quantity by category
     const byCatQty: Record<string, number> = {};
     for (const s of this.filteredSalesDetails) {
       const cat = s.category || 'Unknown';
@@ -331,7 +582,7 @@ goToNotification(): void {
   }
 
   // ---------------- Utils ---------------- //
-  formatDate(dateString: string): string {
+  formatDate(dateString?: string): string {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return 'N/A';
@@ -339,7 +590,7 @@ goToNotification(): void {
   }
 
   exportSalesData(): void {
-    // Export *filtered* rows as CSV (can switch to XLSX later)
+    // Export *filtered* rows as CSV
     const rows = this.filteredSalesDetails;
     if (!rows.length) { console.warn('No data to export'); return; }
 

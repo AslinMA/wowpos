@@ -32,7 +32,7 @@ export class NotificationComponent implements OnInit {
 
   ngOnInit(): void {
     // fetch all bands up to 15; backend returns band per item
-    this.http.get<LowStockItem[]>('http://localhost:8080/notifications/low-stock?max=15').subscribe({
+    this.http.get<LowStockItem[]>('/api/notifications/low-stock?max=15').subscribe({
       next: (rows) => { this.all = rows || []; this.applyFilter(); },
       error: (e) => { console.error('low-stock fetch failed', e); this.all = []; this.applyFilter(); }
     });

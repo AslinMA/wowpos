@@ -1,13 +1,10 @@
 <div
-  class=" bg-white dark:bg-white-100 shadow-md sm:rounded-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-3 sm:p-5 mx-auto lg:mx-0 lg:ml-[300px] lg:mr-[30px] mt-20">
+  class="bg-white dark:bg-white-100 shadow-md sm:rounded-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-3 sm:p-5 mx-auto lg:mx-0 mx-auto max-w-7xl mt-20">
+
   <!-- Display -->
-   
   <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm overflow-hidden">
-
     <div class="px-5 py-5 flex items-center space-x-4">
-
       <div class="flex-shrink-0 text-yellow-500">
-        <!-- Icon: Desktop Computer (Display) -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M9.75 17h4.5M4 6h16v9a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" />
@@ -28,11 +25,11 @@
       </div>
     </div>
   </div>
+
   <!-- Chargers -->
   <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm overflow-hidden">
     <div class="px-5 py-5 flex items-center space-x-4">
       <div class="flex-shrink-0 text-yellow-500">
-        <!-- Icon: Lightning Bolt -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
@@ -57,7 +54,6 @@
   <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm overflow-hidden">
     <div class="px-5 py-5 flex items-center space-x-4">
       <div class="flex-shrink-0 text-yellow-500">
-        <!-- Icon: Shield (representing protection) -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -83,7 +79,6 @@
   <div class="bg-yellow-50 border border-yellow-500 text-dark rounded-lg shadow-sm overflow-hidden">
     <div class="px-5 py-5 flex items-center space-x-4">
       <div class="flex-shrink-0 text-yellow-500">
-        <!-- Icon: Music Note or Headphones -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M4 12v2a4 4 0 004 4v-6a4 4 0 00-4 0zm16 0v2a4 4 0 01-4 4v-6a4 4 0 014 0zM12 4a8 8 0 00-8 8v1h2v-1a6 6 0 1112 0v1h2v-1a8 8 0 00-8-8z" />
@@ -104,113 +99,91 @@
       </div>
     </div>
   </div>
-
-
-
 </div>
 
-<div
-  class="flex flex-col lg:flex-row justify-center gap-6 bg-white dark:bg-white-100 shadow-md sm:rounded-lg p-4 sm:p-6 mx-2 sm:mx-auto lg:ml-[300px] lg:mr-[30px] mt-6">
+<!-- Weekly Sales & Quick Actions Row -->
+<div class="flex flex-col lg:flex-row justify-center gap-6 bg-white dark:bg-white-100 shadow-md sm:rounded-lg p-4 sm:p-6 mx-2 sm:mx-auto max-w-7xl mt-6">
 
-  <!-- Sales Chart -->
-  <div class="w-full lg:w-2/3 bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4">
-    <div class="flex flex-col sm:flex-row justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700">
-      <div class="flex items-center mb-4 sm:mb-0">
-        <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3">
-          <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 19">
-            <path
-              d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
-            <path
-              d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+  <!-- Weekly Sales Card -->
+  <div class="w-full lg:w-1/2 bg-gradient-to-br from-gray-700 to-gray-900 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-16 -mt-16"></div>
+
+    <div class="bg-white bg-opacity-20 rounded-xl p-3 w-14 h-14 flex items-center justify-center mb-4">
+      <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path>
+      </svg>
+    </div>
+
+    <div class="relative z-10">
+      <h3 class="text-3xl font-bold mb-1">
+        Rs. {{ totalSalesThisWeek | number:'1.0-0' }}
+      </h3>
+      <p class="text-gray-300 text-sm mb-3">Total sales this week</p>
+
+      <div class="flex items-center gap-2">
+        <span [ngClass]="weeklyGrowth >= 0 ? 'bg-green-500' : 'bg-red-500'" 
+              class="bg-opacity-20 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1"
+              [class.text-green-300]="weeklyGrowth >= 0"
+              [class.text-red-300]="weeklyGrowth < 0">
+          <svg *ngIf="weeklyGrowth >= 0" class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
           </svg>
-        </div>
-        <div>
-          <h5 class="text-2xl font-bold text-gray-900 dark:text-white" id="total-sales">Rs. 45,000</h5>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Total sales this week</p>
-        </div>
-      </div>
-      <div>
-        <span class="bg-green-100 text-green-800 text-xs font-medium inline-flex items-center px-2.5 py-1 rounded-md">
-          <svg class="w-2.5 h-2.5 mr-1.5" fill="none" viewBox="0 0 10 14">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M5 13V1m0 0L1 5m4-4 4 4" />
+          <svg *ngIf="weeklyGrowth < 0" class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
           </svg>
-          12.5%
+          {{ weeklyGrowth >= 0 ? '+' : '' }}{{ weeklyGrowth | number:'1.1-1' }}%
         </span>
+        <span class="text-xs text-gray-400">vs last week</span>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-      <dl class="flex items-center">
-        <dt class="text-gray-500 text-sm mr-1">Today's Revenue:</dt>
-        <dd class="text-gray-400 text-sm font-semibold" id="today-revenue">Rs. {{todayRevenue}}</dd>
-      </dl>
-      <dl class="flex items-center justify-start sm:justify-end">
-        <dt class="text-gray-500 text-sm mr-1">Profit Margin:</dt>
-        <dd class="text-gray-400 text-sm font-semibold">28%</dd>
-      </dl>
-    </div>
-
-    <div class="overflow-x-auto">
-      <canvas id="salesChart" baseChart
-          [data]="chartData"
-          
-          [options]="chartOptions"
-          [type]="chartType" class="w-full h-64"></canvas>
+    <div class="mt-4 pt-4 border-t border-white border-opacity-10 flex justify-between text-xs">
+      <div>
+        <p class="text-gray-400">Today's Revenue:</p>
+        <p class="font-semibold">Rs. {{ todayRevenue | number:'1.0-0' }}</p>
+      </div>
+      <div class="text-right">
+        <p class="text-gray-400">Profit Margin:</p>
+        <p class="font-semibold">{{ profitMargin }}%</p>
+      </div>
     </div>
   </div>
 
-<!-- Quick Actions Section -->
-<div class="w-full lg:w-1/3 bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4">
-  <h5 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Quick Actions</h5>
-  <div class="space-y-3 mb-6">
-    <button (click)="addNewStock()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg">+ Add New Stock</button>
-    <button (click)="goToNotification()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg">⚠️ View Low Stock Items</button>
-    <button (click)="goToSalesReports()" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg">📊 Sales Report</button>
+  <!-- Quick Actions Section -->
+  <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-sm dark:bg-gray-800 p-6">
+    <h5 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Quick Actions</h5>
+    <div class="space-y-3">
+      <button (click)="addNewStock()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+        <span class="text-lg mr-2">+</span> Add New Stock
+      </button>
+      <button (click)="goToNotification()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+        <span class="text-lg mr-2">⚠️</span> View Low Stock Items
+      </button>
+      <button (click)="goToSalesReports()" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+        <span class="text-lg mr-2">📊</span> Sales Report
+      </button>
+    </div>
   </div>
 </div>
 
-<!-- Sales Report Section (Initially Hidden) -->
-<div *ngIf="showSalesReport" class="w-full lg:w-2/3 bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4 mt-6">
-  <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Sales Report</h3>
-
-  <!-- Sales Overview -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-    <div class="flex justify-between">
-      <span class="text-sm font-semibold text-gray-800">Total Sales</span>
-      <span class="text-sm font-bold text-gray-800">Rs. {{ totalSales }}</span>
-    </div>
-    <div class="flex justify-between">
-      <span class="text-sm font-semibold text-gray-800">Total Revenue</span>
-      <span class="text-sm font-bold text-gray-800">Rs. {{ totalRevenue }}</span>
-    </div>
-    <div class="flex justify-between">
-      <span class="text-sm font-semibold text-gray-800">Profit Margin</span>
-      <span class="text-sm font-bold text-gray-800">{{ profitMargin }}%</span>
-    </div>
+<!-- Daily Sales Performance Chart (FULL WIDTH SECTION) -->
+<div class="w-full bg-white rounded-lg shadow-md dark:bg-gray-800 p-6 mx-2 sm:mx-auto max-w-7xl mt-6">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Daily Sales Performance</h3>
+    <span class="text-sm text-gray-500">Last 7 Days</span>
   </div>
 
-  <!-- Sales Chart -->
-  <div class="overflow-x-auto">
-    <canvas id="salesChart" baseChart [data]="salesChartData" [options]="salesChartOptions" [type]="'line'"></canvas>
-  </div>
-
-  <!-- Category-wise Sales -->
-  <div class="mt-6">
-    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Category-wise Sales</h4>
-    <canvas id="categorySalesChart" baseChart [data]="categorySalesData" [options]="categorySalesOptions" [type]="'bar'"></canvas>
-  </div>
-
-  <!-- Product Performance -->
-  <div class="mt-6">
-    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Product Performance</h4>
-    <canvas id="productPerformanceChart" baseChart [data]="productPerformanceData" [options]="productPerformanceOptions" [type]="'radar'"></canvas>
+  <div class="h-80">
+    <canvas baseChart
+            [data]="dailySalesChartData"
+            [options]="dailySalesChartOptions"
+            [type]="'line'">
+    </canvas>
   </div>
 </div>
 
-</div>
-
-<section class=" shadow-md sm:rounded-lg mt-10 bg-white-50 dark:bg-white-900 p-3 sm:p-5 mx-auto lg:mx-0 lg:ml-[300px] lg:mr-[30px]"
+<section class=" shadow-md sm:rounded-lg mt-10 bg-white-50 dark:bg-white-900 p-3 sm:p-5 mx-auto lg:mx-0 mx-auto max-w-7xl
+"
     (click)="closeDropdowns()">
     <h1 class="text-3xl font-medium mb-5 dark:text-gray-600">Sales Details Management</h1>
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">

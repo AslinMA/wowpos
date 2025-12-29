@@ -1,0 +1,100 @@
+<section class="mt-20 max-w-6xl mx-auto p-4">
+  <h1 class="text-3xl font-semibold mb-6 text-gray-800">Net Profit Report</h1>
+
+  <!-- Date filters -->
+  <div class="bg-white shadow-sm rounded-lg p-6 mb-6 flex flex-wrap gap-4 items-end">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+      <input type="date" [(ngModel)]="fromDate"
+             class="border border-gray-300 rounded-lg px-4 py-2 w-48 focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+      <input type="date" [(ngModel)]="toDate"
+             class="border border-gray-300 rounded-lg px-4 py-2 w-48 focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+    </div>
+    <button (click)="loadSummary()"
+            [disabled]="loading"
+            class="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white rounded-lg text-sm font-semibold transition-colors">
+      {{ loading ? 'Loading...' : 'Refresh Report' }}
+    </button>
+    <div class="text-sm text-gray-500 ml-auto" *ngIf="summary">
+      Period: {{ summary.fromDate }} → {{ summary.toDate }}
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+    {{ error }}
+  </div>
+
+  <!-- KPI Cards -->
+  <div *ngIf="summary" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+    
+    <!-- Sales -->
+    <div class="bg-white shadow-lg rounded-xl p-6 border-l-4 border-blue-500">
+      <div class="text-xs text-gray-500 uppercase tracking-wide mb-2">Sales</div>
+      <div class="text-2xl font-bold text-gray-900">Rs. {{ summary.salesNet | number:'1.0-0' }}</div>
+      <div class="text-sm text-gray-500 mt-1">COGS: Rs. {{ summary.salesCOGS | number:'1.0-0' }}</div>
+      <div class="text-sm font-semibold text-blue-700">Profit: Rs. {{ summary.salesProfit | number:'1.0-0' }}</div>
+    </div>
+
+    <!-- Repairs - DETAILED -->
+    <div class="bg-white shadow-lg rounded-xl p-6 border-l-4 border-green-500 xl:col-span-2">
+      <div class="text-xs text-gray-500 uppercase tracking-wide mb-3">Repairs</div>
+      
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <div class="text-xs text-gray-500">Parts Cost</div>
+          <div class="text-lg font-bold text-red-600">-Rs. {{ summary.repairPartsCost | number:'1.0-0' }}</div>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500">Parts Revenue</div>
+          <div class="text-lg font-bold text-gray-900">Rs. {{ summary.repairPartsRevenue | number:'1.0-0' }}</div>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500">Parts Profit</div>
+          <div class="text-sm font-semibold text-green-600">Rs. {{ summary.repairPartsProfit | number:'1.0-0' }}</div>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500">Labor Charge</div>
+          <div class="text-lg font-bold text-blue-600">Rs. {{ summary.repairLaborRevenue | number:'1.0-0' }}</div>
+        </div>
+      </div>
+
+      <div class="border-t pt-3">
+        <div class="text-xl font-bold text-green-700">
+          Total Repair Profit: Rs. {{ summary.repairProfit | number:'1.0-0' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Losses -->
+    <div class="bg-white shadow-lg rounded-xl p-6 border-l-4 border-red-500">
+      <div class="text-xs text-gray-500 uppercase tracking-wide mb-2">Losses</div>
+      <div class="text-sm text-red-600 mb-1">Damage: Rs. {{ summary.damageLoss | number:'1.0-0' }}</div>
+      <div class="text-sm text-red-600 mb-3">Returns: Rs. {{ summary.returnLoss | number:'1.0-0' }}</div>
+      <div class="text-lg font-bold text-red-800 mt-2">
+        Total: Rs. {{ summary.totalLoss | number:'1.0-0' }}
+      </div>
+    </div>
+
+    <!-- Net Profit -->
+    <div class="bg-gradient-to-r from-green-50 to-blue-50 shadow-xl rounded-xl p-6 border-l-4 border-yellow-500 lg:col-span-2 xl:col-span-1">
+      <div class="text-xs text-gray-500 uppercase tracking-wide mb-3">True Net Profit</div>
+      <div class="text-3xl font-extrabold mb-2"
+           [ngClass]="{'text-green-700': summary.trueNetProfit >= 0, 'text-red-700': summary.trueNetProfit < 0}">
+        Rs. {{ summary.trueNetProfit | number:'1.0-0' }}
+      </div>
+      <div class="text-xs text-gray-500 space-y-1">
+        <div>Gross Profit: Rs. {{ summary.grossProfit | number:'1.0-0' }}</div>
+        <div>Loss % of Sales: {{ summary.lossPctOfSales | number:'1.1-1' }}%</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div *ngIf="loading" class="text-center py-12">
+    <div class="text-lg text-gray-500">Loading net profit data...</div>
+  </div>
+</section>

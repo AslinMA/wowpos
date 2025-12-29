@@ -11,6 +11,11 @@ import { SellingComponent } from './pages/selling/selling.component';
 import { NotificationComponent } from './pages/notification/notification.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { SalesReportsComponent } from './pages/sales-reports/sales-reports.component';
+import { ManageModelsComponent } from './pages/manage-models/manage-models.component';
+import { DamageComponent } from './pages/damage/damage.component';
+import { ReturnComponent } from './pages/return/return.component';
+import { RepairComponent } from './pages/repair/repair.component';
+import { NetProfitReportsComponent } from './pages/net-profit-reports/net-profit-reports.component';
 
 export const routes: Routes = [
   {
@@ -24,11 +29,15 @@ export const routes: Routes = [
       { path: '', component: LoginComponent },
       { path: 'login', component: LoginComponent },
       { path: 'requement', component: RequementListComponent },
+      { path: 'manage-models', component:ManageModelsComponent },
       { path: 'selling', component: SellingComponent },
       { path: 'singup', component: SingupComponent },
       { path: 'notification', component: NotificationComponent },
       { path: 'cart', component: CartComponent },
-      { path: 'sales-reports', component: SalesReportsComponent },
+      { path: 'sales-reports', component :NetProfitReportsComponent},
+      { path: 'damage', component: DamageComponent },
+      { path: 'return', component:ReturnComponent },
+      { path: 'repair', component:RepairComponent },
     ]
   }
 ];

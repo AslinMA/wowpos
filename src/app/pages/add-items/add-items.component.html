@@ -1,116 +1,154 @@
-<form class="shadow-md sm:rounded-lg p-10 mx-auto mt-20 lg:mx-0 lg:ml-[300px] lg:mr-[30px]">
+<form class="shadow-md sm:rounded-lg p-4 sm:p-6 md:p-10 mx-auto mt-20 max-w-7xl">
     <div>
-        <h1 class="text-3xl font-medium mb-5 dark:text-gray-600">Add Items For Inventory</h1>
+        <h1 class="text-2xl sm:text-3xl font-medium mb-5 dark:text-gray-600">Add Items For Inventory</h1>
     </div>
+    
+    <!-- Date Field -->
     <div class="mb-6">
         <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">Date</label>
-        <input type="date" id="date" name="date" [(ngModel)]="items.date"
-            class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-sm p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
+        <input 
+            type="date" 
+            id="date" 
+            name="date" 
+            [(ngModel)]="items.date"
+            class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-sm p-2.5"
             required />
     </div>
 
     <div class="grid gap-6 mb-6 md:grid-cols-2">
+        
         <!-- Category Dropdown -->
         <div>
-            <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">Category</label>
-            <input list="categoryOptions" id="category" name="category" [(ngModel)]="items.category"
-                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                placeholder="Choose category" required />
+            <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+                Category <span class="text-red-500">*</span>
+            </label>
+            <input 
+                list="categoryOptions" 
+                id="category" 
+                name="category" 
+                [(ngModel)]="items.category"
+                (change)="onCategoryChange()"
+                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Choose category" 
+                required />
             <datalist id="categoryOptions">
-                <option value="Display"></option>
-                <option value="Temperd"></option>
-                <option value="Handfree"></option>
-                <option value="Mic"></option>
-                <option value="Charger"></option>
+                <option *ngFor="let category of categories" [value]="category"></option>
             </datalist>
         </div>
 
         <!-- Brand Dropdown -->
         <div>
-            <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">Brand</label>
-            <input list="brandOptions" id="brand" name="brand" [(ngModel)]="items.brand"
-                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                placeholder="Choose brand" required />
+            <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+                Brand <span class="text-red-500">*</span>
+            </label>
+            <input 
+                list="brandOptions" 
+                id="brand" 
+                name="brand" 
+                [(ngModel)]="items.brand" 
+                (change)="onBrandChange()"
+                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Choose brand" 
+                required />
             <datalist id="brandOptions">
-                <option value="Apple"></option>
-                <option value="Samsung"></option>
-                <option value="Redmi"></option>
-                <option value="Nokia"></option>
+                <option *ngFor="let brand of brands" [value]="brand"></option>
             </datalist>
         </div>
 
-        <!-- Model Dropdown (Populated based on selected brand) -->
+        <!-- Model Dropdown (Filtered by Brand) -->
         <div>
-            <label for="model" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">Model</label>
-            <input list="modelOptions" id="model" name="model"[(ngModel)]="items.model"
-                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                placeholder="Choose model" required />
+            <label for="model" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+                Model <span class="text-red-500">*</span>
+            </label>
+            <input 
+                list="modelOptions" 
+                id="model" 
+                name="model" 
+                [(ngModel)]="items.model"
+                [disabled]="!items.brand"
+                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                [placeholder]="items.brand ? 'Choose model' : 'Select brand first'" 
+                required />
             <datalist id="modelOptions">
-                <!-- Apple -->
-                <option value="iPhone 6">iPhone 6</option>
-                <option value="iPhone 6s">iPhone 6s</option>
-                <option value="iPhone 6 Plus">iPhone 6 Plus</option>
-                <option value="iPhone 7">iPhone 7</option>
-                <option value="iPhone X">iPhone X</option>
-
-                <!-- Samsung -->
-                <option value="Galaxy S21">Galaxy S21</option>
-                <option value="Galaxy Note 10">Galaxy Note 10</option>
-                <option value="Galaxy A52">Galaxy A52</option>
-
-                <!-- Redmi -->
-                <option value="Note 9">Note 9</option>
-                <option value="Note 10 Pro">Note 10 Pro</option>
-                <option value="Redmi 12C">Redmi 12C</option>
-
-                <!-- Nokia -->
-                <option value="Nokia 6.1">Nokia 6.1</option>
-                <option value="Nokia 7.2">Nokia 7.2</option>
-                <option value="Nokia 3.4">Nokia 3.4</option>
-
+                <option *ngFor="let model of models" [value]="model"></option>
             </datalist>
+            <p *ngIf="!items.brand" class="mt-1 text-xs text-gray-500">Please select a brand first</p>
         </div>
 
         <!-- Quantity -->
         <div>
-            <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">Quantity</label>
-            <input type="number" id="quantity" name="quantity" min="1"[(ngModel)]="items.quantity"
-                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                placeholder="Enter quantity" required />
+            <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+                Quantity <span class="text-red-500">*</span>
+            </label>
+            <input 
+                type="number" 
+                id="quantity" 
+                name="quantity" 
+                min="1" 
+                [(ngModel)]="items.quantity"
+                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Enter quantity" 
+                required />
         </div>
 
-        <!-- Price per unit -->
+        <!-- Buy Price -->
         <div>
-            <label for="buyprice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">Price per One
-                (Buy)</label>
-            <input type="number" id="buyprice" name="buyprice" min="0" step="0.01"[(ngModel)]="items.buyPrice"
-                class="bg-white-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                placeholder="Enter price" required />
+            <label for="buyprice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+                Buy Price (per unit) <span class="text-red-500">*</span>
+            </label>
+            <input 
+                type="number" 
+                id="buyprice" 
+                name="buyprice" 
+                min="0" 
+                step="0.01" 
+                [(ngModel)]="items.buyPrice"
+                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Enter buy price" 
+                required />
         </div>
+
+        <!-- Sell Price -->
         <div>
-            <label for="sellprice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">Price per One
-                (Sell)</label>
-            <input type="number" id="sellprice" name="sellprice" min="0" step="0.01" [(ngModel)]="items.sellPrice"
-                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                placeholder="Enter price" required />
+            <label for="sellprice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+                Sell Price (per unit) <span class="text-red-500">*</span>
+            </label>
+            <input 
+                type="number" 
+                id="sellprice" 
+                name="sellprice" 
+                min="0" 
+                step="0.01" 
+                [(ngModel)]="items.sellPrice"
+                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Enter sell price" 
+                required />
         </div>
+
+        <!-- Location -->
         <div>
-            <label for="location" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">Location</label>
-            <input list="locationOption" id="location" name="price" min="0" step="0.01" [(ngModel)]="items.location"
-                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                placeholder="Please of store" required />
+            <label for="location" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+                Location <span class="text-red-500">*</span>
+            </label>
+            <input 
+                list="locationOption" 
+                id="location" 
+                name="location" 
+                [(ngModel)]="items.location"
+                class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Place in store" 
+                required />
             <datalist id="locationOption">
-                <option value="Rack A"></option>
-                <option value="Rack B"></option>
-                <option value="Rack C"></option>
-                <option value="Rack D"></option>
+                <option *ngFor="let location of locations" [value]="location"></option>
             </datalist>
         </div>
     </div>
 
-    <button type="submit" (click)="addItems()"
-        class="text-dark bg-yellow-500 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-yellow-300 dark:hover:bg-yellow-700 dark:focus:ring-blue-800">
+    <!-- Submit Button -->
+    <button 
+        type="submit" 
+        (click)="addItems()"
+        class="text-dark bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center transition-colors">
         Submit
-
     </button>
 </form>

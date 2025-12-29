@@ -1,0 +1,202 @@
+<div class="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Manage Device Models</h1>
+            <p class="mt-2 text-gray-600">Add, edit, or delete phone models for your inventory</p>
+        </div>
+
+        <!-- Add/Edit Form -->
+        <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">
+                {{ isEditMode ? 'Edit Model' : 'Add New Model' }}
+            </h2>
+            
+            <form (ngSubmit)="onSubmit()" class="grid gap-6 md:grid-cols-3">
+                
+                <!-- Brand -->
+                <div>
+                    <label for="brand" class="block mb-2 text-sm font-medium text-gray-900">
+                        Brand <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        list="brandOptions" 
+                        id="brand" 
+                        name="brand" 
+                        [(ngModel)]="currentModel.brand"
+                        class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5"
+                        placeholder="Choose or type brand" 
+                        required />
+                    <datalist id="brandOptions">
+                        <option *ngFor="let brand of brands" [value]="brand"></option>
+                    </datalist>
+                </div>
+
+                <!-- Model Name -->
+                <div>
+                    <label for="modelName" class="block mb-2 text-sm font-medium text-gray-900">
+                        Model Name <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="modelName" 
+                        name="modelName" 
+                        [(ngModel)]="currentModel.modelName"
+                        class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5"
+                        placeholder="e.g., iPhone 17" 
+                        required />
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900">
+                        Category <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        list="categoryOptions" 
+                        id="category" 
+                        name="category" 
+                        [(ngModel)]="currentModel.category"
+                        class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5"
+                        placeholder="Choose category" 
+                        required />
+                    <datalist id="categoryOptions">
+                        <option *ngFor="let category of categories" [value]="category"></option>
+                    </datalist>
+                </div>
+
+                <!-- Buttons -->
+                <div class="md:col-span-3 flex gap-3">
+                    <button 
+                        type="submit"
+                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg text-sm px-6 py-2.5 transition-colors">
+                        {{ isEditMode ? 'Update Model' : 'Add Model' }}
+                    </button>
+                    
+                    <button 
+                        type="button"
+                        (click)="resetForm()"
+                        *ngIf="isEditMode"
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg text-sm px-6 py-2.5 transition-colors">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Search & Filter</h2>
+            
+            <div class="grid gap-4 md:grid-cols-4">
+                <!-- Search -->
+                <div>
+                    <label for="search" class="block mb-2 text-sm font-medium text-gray-900">Search</label>
+                    <input 
+                        type="text" 
+                        id="search" 
+                        [(ngModel)]="searchTerm"
+                        (ngModelChange)="applyFilters()"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        placeholder="Search model or brand..." />
+                </div>
+
+                <!-- Filter by Brand -->
+                <div>
+                    <label for="filterBrand" class="block mb-2 text-sm font-medium text-gray-900">Filter by Brand</label>
+                    <select 
+                        id="filterBrand" 
+                        [(ngModel)]="filterBrand"
+                        (ngModelChange)="applyFilters()"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="">All Brands</option>
+                        <option *ngFor="let brand of brands" [value]="brand">{{ brand }}</option>
+                    </select>
+                </div>
+
+                <!-- Filter by Category -->
+                <div>
+                    <label for="filterCategory" class="block mb-2 text-sm font-medium text-gray-900">Filter by Category</label>
+                    <select 
+                        id="filterCategory" 
+                        [(ngModel)]="filterCategory"
+                        (ngModelChange)="applyFilters()"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="">All Categories</option>
+                        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+                    </select>
+                </div>
+
+                <!-- Clear Button -->
+                <div class="flex items-end">
+                    <button 
+                        (click)="clearFilters()"
+                        class="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Models Table -->
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-700">
+                    <thead class="text-xs uppercase bg-yellow-500 text-white">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">ID</th>
+                            <th scope="col" class="px-6 py-3">Brand</th>
+                            <th scope="col" class="px-6 py-3">Model Name</th>
+                            <th scope="col" class="px-6 py-3">Category</th>
+                            <th scope="col" class="px-6 py-3">Created At</th>
+                            <th scope="col" class="px-6 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let model of filteredModels" class="bg-white border-b hover:bg-yellow-50">
+                            <td class="px-6 py-4 font-medium">{{ model.id }}</td>
+                            <td class="px-6 py-4">{{ model.brand }}</td>
+                            <td class="px-6 py-4 font-semibold">{{ model.modelName }}</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                                    {{ model.category }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600">
+                                {{ model.createdAt | date:'short' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex gap-2">
+                                    <button 
+                                        (click)="editModel(model)"
+                                        class="text-blue-600 hover:text-blue-800 font-medium">
+                                        Edit
+                                    </button>
+                                    <button 
+                                        (click)="deleteModel(model.id!)"
+                                        class="text-red-600 hover:text-red-800 font-medium">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Empty State -->
+                        <tr *ngIf="filteredModels.length === 0">
+                            <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                No models found. Add your first model above!
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="mt-6 text-center text-gray-600">
+            Showing {{ filteredModels.length }} of {{ models.length }} models
+        </div>
+
+    </div>
+</div>

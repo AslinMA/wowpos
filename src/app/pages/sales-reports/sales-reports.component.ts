@@ -15,6 +15,7 @@ interface BackendSaleRow {
   date: string;
   discountedPrice?: string;
   sellPrice?: string;
+  buyPrice?: string;        // ✅ ADDED
   category?: string;
   brand?: string;
   model?: string;
@@ -23,7 +24,7 @@ interface BackendSaleRow {
 
 // Normalized row
 interface Row {
-  date: string;              // yyyy-MM-dd
+  date: string;
   transactionId: string;
   name: string;
   phoneNumber: string;
@@ -33,9 +34,13 @@ interface Row {
   qty: number;
   sell: number;
   discounted: number;
-  net: number;               // (discounted || sell)
-  gross: number;             // sell
-  discountAmt: number;       // sell - discounted (if discounted present)
+  net: number;
+  gross: number;
+  discountAmt: number;
+  buyPrice: number;         // ✅ ADDED
+  totalCost: number;        // ✅ ADDED
+  profit: number;           // ✅ ADDED
+  profitMargin: number;     // ✅ ADDED
 }
 
 @Component({
@@ -76,10 +81,13 @@ export class SalesReportsComponent implements OnInit {
   totalOrders = 0;
   unitsSold = 0;
   discounts = 0;
-  taxes = 0;          // not provided yet
+  taxes = 0;
   aov = 0;
-  grossMarginPct = 0; // requires COGS
-  netProfit = 0;      // requires COGS/expenses
+  grossMarginPct = 0;
+  netProfit = 0;
+  totalCOGS = 0;           // ✅ ADDED
+  grossProfit = 0;         // ✅ ADDED
+  avgProfitMargin = 0;     // ✅ ADDED
 
   // Charts
   revenueOverTimeData: ChartData<'line'> = { labels: [], datasets: [] };
@@ -100,12 +108,12 @@ export class SalesReportsComponent implements OnInit {
 
   // ===== Backend =====
   fetch(): void {
-    this.http.get<BackendSaleRow[]>('http://localhost:8080/saler-retrive').subscribe({
+    this.http.get<BackendSaleRow[]>('/api/saler-retrive').subscribe({
       next: (data) => {
         this.raw = data || [];
         this.rows = this.normalize(this.raw);
         this.buildFacets(this.rows);
-        this.setPreset('last30'); // default
+        this.setPreset('last30');
         this.applyAll();
       },
       error: (e) => {
@@ -118,6 +126,7 @@ export class SalesReportsComponent implements OnInit {
     });
   }
 
+  // ✅ UPDATED normalize() method
   normalize(list: BackendSaleRow[]): Row[] {
     const toNum = (v?: string) => {
       if (v == null) return 0;
@@ -135,9 +144,16 @@ export class SalesReportsComponent implements OnInit {
       const qty = toNum(r.quantity);
       const sell = toNum(r.sellPrice);
       const disc = toNum(r.discountedPrice);
+      const buyPrice = toNum(r.buyPrice);      // ✅ ADDED
+
       const net = disc > 0 ? disc : sell;
       const gross = sell;
       const discountAmt = disc > 0 ? Math.max(0, sell - disc) : 0;
+
+      // ✅ ADDED profit calculations
+      const totalCost = buyPrice * qty;
+      const profit = net - totalCost;
+      const profitMargin = net > 0 ? (profit / net) * 100 : 0;
 
       return {
         date: toDateStr(r.date),
@@ -153,6 +169,10 @@ export class SalesReportsComponent implements OnInit {
         net,
         gross,
         discountAmt,
+        buyPrice,           // ✅ ADDED
+        totalCost,          // ✅ ADDED
+        profit,             // ✅ ADDED
+        profitMargin        // ✅ ADDED
       };
     });
   }
@@ -187,7 +207,7 @@ export class SalesReportsComponent implements OnInit {
     this.buildCharts();
     this.page = 1;
   }
-  // sales-reports.component.ts
+
   prevPage(): void {
     this.page = Math.max(1, this.page - 1);
   }
@@ -196,21 +216,16 @@ export class SalesReportsComponent implements OnInit {
     this.page = Math.min(this.totalPages(), this.page + 1);
   }
 
-
-
   filteredRows(): Row[] {
     let list = [...this.rows];
 
-    // date
     if (this.fromDate) list = list.filter(r => r.date >= this.fromDate);
     if (this.toDate) list = list.filter(r => r.date <= this.toDate);
 
-    // facets
     if (this.categories.length) list = list.filter(r => this.categories.includes(r.category));
     if (this.brands.length) list = list.filter(r => this.brands.includes(r.brand));
     if (this.models.length) list = list.filter(r => this.models.includes(r.model));
 
-    // search
     const q = this.search.trim().toLowerCase();
     if (q) list = list.filter(r => (
       r.name.toLowerCase().includes(q) ||
@@ -219,7 +234,6 @@ export class SalesReportsComponent implements OnInit {
       r.model.toLowerCase().includes(q)
     ));
 
-    // sort
     list.sort((a, b) => {
       const av = (this.sortKey === 'margin') ? (a.net) : (a[this.sortKey] as any);
       const bv = (this.sortKey === 'margin') ? (b.net) : (b[this.sortKey] as any);
@@ -259,7 +273,7 @@ export class SalesReportsComponent implements OnInit {
     this.applyAll();
   }
 
-  // ===== KPIs =====
+  // ✅ UPDATED computeKPIs() method
   private computeKPIs(): void {
     const list = this.filteredRows();
     this.totalOrders = list.length;
@@ -267,7 +281,12 @@ export class SalesReportsComponent implements OnInit {
     this.grossSales = list.reduce((s, r) => s + r.gross, 0);
     this.netSales = list.reduce((s, r) => s + r.net, 0);
     this.discounts = list.reduce((s, r) => s + r.discountAmt, 0);
-    // taxes, margin%, profit to be wired when backend provides fields
+
+    // ✅ ADDED profit calculations
+    this.totalCOGS = list.reduce((s, r) => s + r.totalCost, 0);
+    this.grossProfit = this.netSales - this.totalCOGS;
+    this.avgProfitMargin = this.netSales > 0 ? (this.grossProfit / this.netSales) * 100 : 0;
+
     this.aov = this.totalOrders ? Math.round((this.netSales / this.totalOrders) * 100) / 100 : 0;
   }
 
@@ -275,7 +294,6 @@ export class SalesReportsComponent implements OnInit {
   private buildCharts(): void {
     const list = this.filteredRows();
 
-    // by date
     const byDate: Record<string, { net: number; qty: number; }> = {};
     for (const r of list) {
       byDate[r.date] = byDate[r.date] || { net: 0, qty: 0 };
@@ -292,13 +310,11 @@ export class SalesReportsComponent implements OnInit {
       datasets: [{ label: 'Units', data: dates.map(d => byDate[d].qty), borderWidth: 2, fill: false }]
     };
 
-    // category mix (net)
     const byCat: Record<string, number> = {};
     for (const r of list) byCat[r.category] = (byCat[r.category] || 0) + r.net;
     const cats = Object.keys(byCat);
     this.categoryMixData = { labels: cats, datasets: [{ label: 'By Category (Net)', data: cats.map(c => byCat[c]) }] };
 
-    // brand mix (net)
     const byBrand: Record<string, number> = {};
     for (const r of list) byBrand[r.brand] = (byBrand[r.brand] || 0) + r.net;
     const brs = Object.keys(byBrand);
@@ -308,10 +324,10 @@ export class SalesReportsComponent implements OnInit {
   // ===== Export / Print =====
   exportCSV(): void {
     const list = this.filteredRows();
-    const headers = ['date', 'transactionId', 'name', 'phoneNumber', 'category', 'brand', 'model', 'qty', 'sell', 'discounted', 'net', 'gross', 'discountAmt'];
+    const headers = ['date', 'transactionId', 'name', 'phoneNumber', 'category', 'brand', 'model', 'qty', 'cost', 'gross', 'discount', 'net', 'profit', 'margin%'];
     const content = [headers.join(',')]
       .concat(list.map(r =>
-        [r.date, r.transactionId, r.name, r.phoneNumber, r.category, r.brand, r.model, r.qty, r.sell, r.discounted, r.net, r.gross, r.discountAmt]
+        [r.date, r.transactionId, r.name, r.phoneNumber, r.category, r.brand, r.model, r.qty, r.totalCost, r.gross, r.discountAmt, r.net, r.profit, r.profitMargin.toFixed(1)]
           .map(v => String(v).replace(/,/g, ' ')).join(',')
       ))
       .join('\n');

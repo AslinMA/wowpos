@@ -1,5 +1,5 @@
-<app-navbar></app-navbar>
-<app-dashbord></app-dashbord>
-<div class="pt-10 px-4"> <!-- Adjust padding-top to match navbar height -->
+<app-navbar (sidebarToggle)="dashboardComponent.toggleSidebar()"></app-navbar>
+<app-dashbord #dashboardComponent></app-dashbord>
+<div class="pt-20 px-4 sm:px-6 lg:ml-64 lg:px-8">
   <router-outlet></router-outlet>
 </div>

@@ -1,0 +1,514 @@
+<section class="bg-white dark:bg-white-100 shadow-md sm:rounded-lg p-4 sm:p-6 mx-2 sm:mx-auto max-w-7xl mt-20">
+
+  <!-- Header with View Switcher -->
+  <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-3">
+    <h1 class="text-3xl font-medium text-gray-900 dark:text-gray-600">🔧 Repair Management</h1>
+
+    <div class="flex gap-2">
+      <button (click)="switchView('create')" [class.bg-yellow-500]="currentView === 'create'"
+        [class.text-white]="currentView === 'create'" [class.bg-gray-200]="currentView !== 'create'"
+        class="px-4 py-2 rounded-lg font-medium text-sm">
+        ➕ New Repair
+      </button>
+      <button (click)="switchView('search')" [class.bg-yellow-500]="currentView === 'search'"
+        [class.text-white]="currentView === 'search'" [class.bg-gray-200]="currentView !== 'search'"
+        class="px-4 py-2 rounded-lg font-medium text-sm">
+        🔍 Search Repair
+      </button>
+    </div>
+  </div>
+
+  <!-- CREATE NEW REPAIR VIEW -->
+  <div *ngIf="currentView === 'create'" class="space-y-6">
+
+    <!-- Customer Info -->
+    <div class="bg-white dark:bg-white-100 shadow-sm sm:rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-600 mb-4">Customer Information</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-500 mb-2">Customer Name *</label>
+          <input type="text" [(ngModel)]="customerName" placeholder="Enter customer name"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-50">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-500 mb-2">Phone Number *</label>
+          <input type="tel" [(ngModel)]="customerPhone" placeholder="07XXXXXXXX"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-50">
+        </div>
+      </div>
+    </div>
+
+    <!-- Device Info -->
+    <div class="bg-white dark:bg-white-100 shadow-sm sm:rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-600 mb-4">Device Information</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-500 mb-2">Device Brand</label>
+          <input type="text" [(ngModel)]="deviceBrand" placeholder="e.g., Apple, Samsung"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-50">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-500 mb-2">Device Model *</label>
+          <input type="text" [(ngModel)]="deviceModel" placeholder="e.g., iPhone 6, Galaxy S25"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-50">
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-500 mb-2">Issue Description *</label>
+        <textarea [(ngModel)]="issueDescription" rows="3" placeholder="Describe the issue..."
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-50"></textarea>
+      </div>
+
+      <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-500 mb-2">Labor Charge (Rs.)</label>
+        <input type="number" [(ngModel)]="laborCharge" min="0" placeholder="0"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-50">
+      </div>
+    </div>
+
+    <!-- Parts Management -->
+    <div class="bg-white dark:bg-white-100 shadow-sm sm:rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-600 mb-4">📦 Parts Needed</h2>
+
+      <!-- Add Part Form -->
+      <!-- Add Part Form -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-500 mb-1">Select Part</label>
+          <select [(ngModel)]="selectedProductId"
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-50">
+            <option [ngValue]="null">-- Select Part --</option>
+            <option *ngFor="let p of products" [ngValue]="p.id">
+              {{ p.brand }} {{ p.model }} - Rs. {{ p.sellPrice | number }} (Stock: {{ p.quantity }})
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-500 mb-1">Quantity</label>
+          <input type="number" [(ngModel)]="partQuantity" min="1"
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-50">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-500 mb-1">Discount (Rs.)</label>
+          <input type="number" [(ngModel)]="partDiscount" min="0" placeholder="0"
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-50">
+        </div>
+
+        <div class="flex items-end">
+          <button (click)="addPart()"
+            class="w-full px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg text-sm">
+            ➕ Add Part
+          </button>
+        </div>
+      </div>
+
+
+      <!-- Added Parts List -->
+      <!-- Added Parts List -->
+      <div *ngIf="addedParts.length > 0" class="border border-gray-300 rounded-lg overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-yellow-100">
+            <tr>
+              <th class="px-4 py-2 text-left">Part Name</th>
+              <th class="px-4 py-2 text-center">Qty</th>
+              <th class="px-4 py-2 text-right">Unit Price</th>
+              <th class="px-4 py-2 text-right">Discount</th>
+              <th class="px-4 py-2 text-right">Total</th>
+              <th class="px-4 py-2 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let part of addedParts; let i = index" class="border-t">
+              <td class="px-4 py-2">{{ part.partName }}</td>
+              <td class="px-4 py-2 text-center">{{ part.quantity }}</td>
+              <td class="px-4 py-2 text-right">Rs. {{ part.unitPrice | number }}</td>
+              <td class="px-4 py-2 text-right text-red-600">-Rs. {{ part.discount | number }}</td>
+              <td class="px-4 py-2 text-right font-semibold">Rs. {{ part.totalPrice | number }}</td>
+              <td class="px-4 py-2 text-center">
+                <button (click)="removePart(i)" class="text-red-600 hover:text-red-800 font-medium">
+                  ❌
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="bg-yellow-50 border-t-2 border-yellow-500">
+            <tr>
+              <td colspan="4" class="px-4 py-3 text-right font-bold text-lg">Total Parts Cost:</td>
+              <td colspan="2" class="px-4 py-3 text-left font-bold text-xl text-yellow-700">
+                Rs. {{ calculatePartsTotal() | number }}
+              </td>
+            </tr>
+            <tr *ngIf="laborCharge > 0">
+              <td colspan="4" class="px-4 py-3 text-right font-bold">Labor Charge:</td>
+              <td colspan="2" class="px-4 py-3 text-left font-bold text-yellow-700">
+                Rs. {{ laborCharge | number }}
+              </td>
+            </tr>
+            <tr class="bg-yellow-100">
+              <td colspan="4" class="px-4 py-3 text-right font-bold text-xl">Total Repair Cost:</td>
+              <td colspan="2" class="px-4 py-3 text-left font-bold text-2xl text-yellow-700">
+                Rs. {{ calculateTotalRepairCost() | number }}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+
+      <div *ngIf="addedParts.length === 0" class="text-center py-8 text-gray-500">
+        No parts added yet. Select parts from inventory above.
+      </div>
+    </div>
+
+    <!-- Submit Buttons -->
+    <div class="flex gap-3">
+      <button (click)="createRepair()"
+        class="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg">
+        💾 Create Repair Job
+      </button>
+      <button (click)="resetForm()"
+        class="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded-lg">
+        Clear Form
+      </button>
+    </div>
+  </div>
+
+  <!-- SEARCH REPAIR VIEW -->
+  <div *ngIf="currentView === 'search'" class="space-y-6">
+
+    <!-- Search Box -->
+    <div class="bg-white dark:bg-white-100 shadow-sm sm:rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-600 mb-4">🔍 Search Repair by ID</h2>
+
+      <div class="flex gap-3">
+        <input type="text" [(ngModel)]="searchRepairCode" placeholder="Enter Phone Number, Customer Name, or Repair ID"
+          class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-50">
+        <button (click)="searchRepair()"
+          class="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg">
+          Search
+        </button>
+      </div>
+    </div>
+
+    <!-- All Repairs Table -->
+    <div class="bg-white dark:bg-white-100 shadow-md sm:rounded-lg overflow-hidden">
+      <div class="p-4 bg-yellow-50">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-600">All Repair Jobs</h3>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-yellow-100">
+            <tr>
+              <th class="px-4 py-3">Repair ID</th>
+              <th class="px-4 py-3">Customer</th>
+              <th class="px-4 py-3">Device</th>
+              <th class="px-4 py-3">Issue</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Cost</th>
+              <th class="px-4 py-3">Date</th>
+              <th class="px-4 py-3">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y">
+            <tr *ngFor="let r of pagedRecords()" class="hover:bg-gray-50">
+              <td class="px-4 py-3 font-medium">REP-{{ r.repairId }}</td>
+              <td class="px-4 py-3">
+                <div>{{ r.customerName }}</div>
+                <div class="text-xs text-gray-500">{{ r.customerPhone }}</div>
+              </td>
+              <td class="px-4 py-3">{{ r.deviceBrand }} {{ r.deviceModel }}</td>
+              <td class="px-4 py-3 max-w-xs truncate">{{ r.issueDescription }}</td>
+              <td class="px-4 py-3">
+                <span class="px-2 py-1 text-xs font-medium rounded-full" [ngClass]="getStatusColor(r.status)">
+                  {{ r.status }}
+                </span>
+              </td>
+              <td class="px-4 py-3 font-semibold">Rs. {{ r.totalCost | number }}</td>
+              <td class="px-4 py-3">{{ r.repairDate | date:'short' }}</td>
+              <td class="px-4 py-3">
+                <button (click)="viewRepair(r)" class="text-yellow-600 hover:text-yellow-800 font-medium">
+                  View →
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <nav class="flex justify-between items-center p-4 border-t">
+        <span class="text-sm">Page {{ page }} / {{ totalPages() }}</span>
+        <div class="flex gap-2">
+          <button (click)="prevPage()" [disabled]="page === 1"
+            class="px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50">
+            Prev
+          </button>
+          <button (click)="nextPage()" [disabled]="page === totalPages()"
+            class="px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50">
+            Next
+          </button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- REPAIR DETAILS VIEW -->
+  <div *ngIf="currentView === 'details' && selectedRepair" class="space-y-6">
+
+    <!-- Repair Header -->
+    <div class="bg-yellow-50 border border-yellow-500 rounded-lg p-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900">Repair ID: REP-{{ selectedRepair.repairId }}</h2>
+          <p class="text-sm text-gray-600">Date: {{ selectedRepair.repairDate | date:'medium' }}</p>
+        </div>
+        <span class="px-4 py-2 text-lg font-bold rounded-full" [ngClass]="getStatusColor(selectedRepair.status)">
+          {{ selectedRepair.status }}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div class="text-sm text-gray-600">Customer</div>
+          <div class="font-semibold">{{ selectedRepair.customerName }}</div>
+          <div class="text-sm text-gray-500">{{ selectedRepair.customerPhone }}</div>
+        </div>
+        <div>
+          <div class="text-sm text-gray-600">Device</div>
+          <div class="font-semibold">{{ selectedRepair.deviceBrand }} {{ selectedRepair.deviceModel }}</div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="text-sm text-gray-600">Issue Description</div>
+        <div class="font-medium">{{ selectedRepair.issueDescription }}</div>
+      </div>
+
+      <div class="mt-4" *ngIf="selectedRepair.laborCharge > 0">
+        <div class="text-sm text-gray-600">Labor Charge</div>
+        <div class="font-semibold text-lg text-yellow-700">Rs. {{ selectedRepair.laborCharge | number }}</div>
+      </div>
+    </div>
+
+    <!-- Parts Used -->
+    <div class="bg-white dark:bg-white-100 shadow-sm sm:rounded-lg p-6">
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-600 mb-4">📦 Parts Used</h3>
+
+      <div *ngIf="selectedRepair.parts && selectedRepair.parts.length > 0"
+        class="border border-gray-300 rounded-lg overflow-hidden mb-4">
+        <table class="w-full text-sm">
+          <thead class="bg-yellow-100">
+            <tr>
+              <th class="px-4 py-2 text-left">Part Name</th>
+              <th class="px-4 py-2 text-left">Category</th>
+              <th class="px-4 py-2 text-center">Qty</th>
+              <th class="px-4 py-2 text-right">Unit Price</th>
+              <th class="px-4 py-2 text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let part of selectedRepair.parts" class="border-t">
+              <td class="px-4 py-2">{{ part.partBrand }} {{ part.partModel }}</td>
+              <td class="px-4 py-2">{{ part.partCategory }}</td>
+              <td class="px-4 py-2 text-center">{{ part.quantity }}</td>
+              <td class="px-4 py-2 text-right">Rs. {{ part.unitPrice | number }}</td>
+              <td class="px-4 py-2 text-right font-semibold">Rs. {{ part.totalPrice | number }}</td>
+            </tr>
+          </tbody>
+          <tfoot class="bg-yellow-50 border-t-2 border-yellow-500">
+            <tr *ngIf="selectedRepair.laborCharge > 0">
+              <td colspan="4" class="px-4 py-3 text-right font-bold">Labor Charge:</td>
+              <td class="px-4 py-3 text-right font-bold text-yellow-700">
+                Rs. {{ selectedRepair.laborCharge | number }}
+              </td>
+            </tr>
+            <tr class="bg-yellow-100">
+              <td colspan="4" class="px-4 py-3 text-right font-bold text-lg">Total Repair Cost:</td>
+              <td class="px-4 py-3 text-right font-bold text-xl text-yellow-700">
+                Rs. {{ selectedRepair.totalCost | number }}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div *ngIf="!selectedRepair.parts || selectedRepair.parts.length === 0"
+        class="text-center py-4 text-gray-500 mb-4">
+        No parts used yet (Labor only)
+      </div>
+
+      <!-- ✅ NEW: Add More Parts Section (Shows when In Progress or Pending) -->
+      <div *ngIf="selectedRepair.status === 'In Progress' || selectedRepair.status === 'Pending'"
+        class="border-t pt-6 space-y-4">
+
+        <h4 class="font-bold text-lg text-gray-900">🔧 Update During Repair</h4>
+
+        <!-- Add Additional Parts -->
+        <!-- Add Additional Parts -->
+        <div class="bg-blue-50 rounded-lg p-4">
+          <h5 class="font-semibold mb-3 text-blue-900">➕ Add Additional Parts (Issues Found)</h5>
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+            <div class="md:col-span-2">
+              <select [(ngModel)]="selectedProductId"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                <option [ngValue]="null">-- Select Part --</option>
+                <option *ngFor="let p of products" [ngValue]="p.id">
+                  {{ p.brand }} {{ p.model }} - Rs. {{ p.sellPrice | number }} (Stock: {{ p.quantity }})
+                </option>
+              </select>
+            </div>
+            <div>
+              <input type="number" [(ngModel)]="partQuantity" min="1" placeholder="Qty"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+              <input type="number" [(ngModel)]="partDiscount" min="0" placeholder="Discount"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <button (click)="addMoreParts()"
+              class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg text-sm">
+              Add Part
+            </button>
+          </div>
+        </div>
+
+
+        <!-- Update Labor Charge and Issues -->
+        <div class="bg-orange-50 rounded-lg p-4">
+          <h5 class="font-semibold mb-3 text-orange-900">📝 Update Labor Charge & Issues</h5>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-sm font-medium mb-1">Additional Labor Charge (Rs.)</label>
+              <input type="number" [(ngModel)]="additionalLaborCharge" min="0"
+                placeholder="Enter additional labor charge"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+              <p class="text-xs text-gray-500 mt-1">
+                Current labor charge: Rs. {{ selectedRepair.laborCharge | number }}
+              </p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Additional Issues Found</label>
+              <textarea [(ngModel)]="additionalIssues" rows="2" placeholder="Describe new issues found during repair..."
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500"></textarea>
+            </div>
+            <button (click)="updateRepairDetails()"
+              class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg text-sm">
+              💾 Update Labor & Issues
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Update Status -->
+    <div class="bg-white dark:bg-white-100 shadow-sm sm:rounded-lg p-6">
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-600 mb-4">Update Status</h3>
+      <div class="flex gap-3">
+        <button (click)="updateStatus('Pending')" [disabled]="selectedRepair.status === 'Pending'"
+          class="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+          ⏳ Pending
+        </button>
+        <button (click)="updateStatus('In Progress')" [disabled]="selectedRepair.status === 'In Progress'"
+          class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+          ⚙️ In Progress
+        </button>
+        <button (click)="updateStatus('Completed')" [disabled]="selectedRepair.status === 'Completed'"
+          class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+          ✅ Completed
+        </button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-3">
+      <button (click)="printBill()" class="px-6 py-3 bg-gray-800 hover:bg-gray-900 text-white font-medium rounded-lg">
+        🖨️ Print Bill
+      </button>
+      <button (click)="switchView('search')"
+        class="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded-lg">
+        ← Back to List
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- PRINTABLE BILL (Hidden on Screen, Shows on Print) -->
+<div class="hidden print:block print:p-8">
+  <div *ngIf="selectedRepair" class="max-w-3xl mx-auto border-2 border-black p-8">
+    <div class="text-center mb-6 border-b-2 border-black pb-4">
+      <h1 class="text-3xl font-bold">WoW Mobile</h1>
+      <p class="text-sm">Phone Repair Service</p>
+      <p class="text-sm">Contact: 071-0539476 | Pitigala, Sri Lanka</p>
+    </div>
+
+    <div class="mb-6">
+      <div class="text-2xl font-bold mb-2">Repair Bill</div>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <div><strong>Repair ID:</strong> REP-{{ selectedRepair.repairId }}</div>
+          <div><strong>Customer:</strong> {{ selectedRepair.customerName }}</div>
+          <div><strong>Phone:</strong> {{ selectedRepair.customerPhone }}</div>
+        </div>
+        <div class="text-right">
+          <div><strong>Date:</strong> {{ selectedRepair.repairDate | date:'short' }}</div>
+          <div><strong>Status:</strong> {{ selectedRepair.status }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <div class="font-bold mb-2">Device Information:</div>
+      <div>{{ selectedRepair.deviceBrand }} {{ selectedRepair.deviceModel }}</div>
+      <div class="text-sm mt-1"><strong>Issue:</strong> {{ selectedRepair.issueDescription }}</div>
+    </div>
+
+    <table class="w-full border border-black mb-6">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="border border-black px-2 py-2 text-left">Part</th>
+          <th class="border border-black px-2 py-2 text-center">Qty</th>
+          <th class="border border-black px-2 py-2 text-right">Price</th>
+          <th class="border border-black px-2 py-2 text-right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let part of selectedRepair.parts">
+          <td class="border border-black px-2 py-2">{{ part.partBrand }} {{ part.partModel }}</td>
+          <td class="border border-black px-2 py-2 text-center">{{ part.quantity }}</td>
+          <td class="border border-black px-2 py-2 text-right">Rs. {{ part.unitPrice | number }}</td>
+          <td class="border border-black px-2 py-2 text-right font-semibold">Rs. {{ part.totalPrice | number }}</td>
+        </tr>
+        <tr *ngIf="selectedRepair.laborCharge > 0">
+          <td colspan="3" class="border border-black px-2 py-2 text-right font-bold">Labor Charge:</td>
+          <td class="border border-black px-2 py-2 text-right font-bold">Rs. {{ selectedRepair.laborCharge | number }}
+          </td>
+        </tr>
+      </tbody>
+      <tfoot class="bg-gray-100">
+        <tr>
+          <td colspan="3" class="border border-black px-2 py-3 text-right font-bold text-lg">TOTAL:</td>
+          <td class="border border-black px-2 py-3 text-right font-bold text-xl">
+            Rs. {{ selectedRepair.totalCost | number }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="text-sm text-center border-t-2 border-black pt-4">
+      <p>Thank you for choosing WooW Mobile!</p>
+     
+       
+     
+    </div>
+  </div>
+</div>

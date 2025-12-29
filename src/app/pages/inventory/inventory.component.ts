@@ -54,7 +54,7 @@ export class InventoryComponent implements OnInit {
   }
 
   getProducts(): void {
-    this.http.get<addItems[]>("http://localhost:8080/product")
+    this.http.get<addItems[]>('/api/product')
       .subscribe(
         data => {
           this.products = data;
@@ -220,22 +220,79 @@ export class InventoryComponent implements OnInit {
   }
 
   goToSelling(items: addItems): void {
-    this.sharedService.setData(items);
-    // console.log("items passing from inventory"+items);
-
-    this.router.navigate(['/selling']);
+  if (items.quantity === 0) {
+    alert('This item is out of stock and cannot be sold.');
+    return;
   }
-  confirmAddToCart(item: addItems) {
-    const confirmed = window.confirm(`Do you want to add "${item.model}" to the cart?`);
-    if (confirmed) {
-    this.sharedCartDataService.addToCart(item);
-    const cartItems=this.sharedCartDataService.getCartItems();
-    
-      alert('Item added to cart!');
+  
+  if (items.quantity < 3) {
+    const confirmed = window.confirm(`Warning: Only ${items.quantity} item(s) remaining. Do you want to proceed with the sale?`);
+    if (!confirmed) {
+      return;
     }
   }
+  
+  this.sharedService.setData(items);
+  this.router.navigate(['/selling']);
+}
+
+  confirmAddToCart(item: addItems): void {
+  if (item.quantity === 0) {
+    alert('This item is out of stock and cannot be added to cart.');
+    return;
+  }
+  
+  if (item.quantity < 3) {
+    const confirmed = window.confirm(`Warning: Only ${item.quantity} item(s) remaining. Do you want to add "${item.model}" to the cart?`);
+    if (!confirmed) {
+      return;
+    }
+  } else {
+    const confirmed = window.confirm(`Do you want to add "${item.model}" to the cart?`);
+    if (!confirmed) {
+      return;
+    }
+  }
+  
+  this.sharedCartDataService.addToCart(item);
+  const cartItems = this.sharedCartDataService.getCartItems();
+  alert('Item added to cart!');
+}
   goToCart(): void {
   this.router.navigate(['/cart']);  
 }
+
+openRestockPrompt(item: addItems): void {
+  const input = window.prompt(
+    `Enter quantity to add for "${item.model}" (current: ${item.quantity})`,
+    '1'
+  );
+  if (!input) { return; }
+
+  const qty = Number(input);
+  if (isNaN(qty) || qty <= 0) {
+    alert('Please enter a valid positive number.');
+    return;
+  }
+
+  this.restockItem(item, qty);
+}
+
+restockItem(item: addItems, qty: number): void {
+  this.http.post(`http://localhost:8080/api/product/${item.id}/restock?qty=${qty}`, {})
+    .subscribe({
+      next: () => {
+        item.quantity = (item.quantity || 0) + qty;
+        this.applyFilters();
+        alert('Stock updated successfully.');
+      },
+      error: err => {
+        console.error('Error restocking', err);
+        alert(err.error?.message || 'Failed to restock item.');
+      }
+    });
+}
+
+
 
 }

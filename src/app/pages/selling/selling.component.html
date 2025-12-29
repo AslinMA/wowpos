@@ -1,7 +1,7 @@
 <!-- selling.component.html -->
 <div class="container mx-auto p-4">
   <!-- Main Form -->
-  <form class="shadow-md sm:rounded-lg p-10 mx-auto mt-20 lg:mx-0 lg:ml-[300px] lg:mr-[30px]" (ngSubmit)="onSubmit()" #sellingForm="ngForm">
+  <form class="shadow-md sm:rounded-lg p-4 sm:p-6 md:p-10 mx-auto mt-20 max-w-7xl" (ngSubmit)="onSubmit()" #sellingForm="ngForm">
     <div>
         <h1 class="text-3xl font-medium mb-5 dark:text-gray-600 mb-10">Customer Details</h1>
     </div>
@@ -24,6 +24,31 @@
                 class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
                 placeholder="071-7095127" required />
         </div>
+    </div>
+
+    <!-- ✅ WARRANTY FIELD -->
+    <div class="mb-6">
+        <label for="warranty" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+            <span class="flex items-center">
+                <svg class="w-5 h-5 mr-2 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                Warranty Period
+            </span>
+        </label>
+        <select id="warranty" name="warranty" [(ngModel)]="selectedWarranty"
+            class="bg-yellow-50 border-2 border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-yellow-600 focus:border-yellow-600 block w-full max-w-sm p-3 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark font-medium"
+            required>
+            <option *ngFor="let warranty of warrantyOptions" [value]="warranty">
+                {{ warranty }}
+            </option>
+        </select>
+        <p class="mt-2 text-xs text-gray-500 flex items-start">
+            <svg class="w-4 h-4 mr-1 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+            </svg>
+            Customer can return or exchange within the selected warranty period.
+        </p>
     </div>
 
     <div>
@@ -54,14 +79,18 @@
                                    placeholder="Enter quantity to sell" />
                         </div>
                         <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Discount per Unit:</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Discount Amount per Unit:</label>
                             <input type="number" 
                                    min="0" 
+                                   [max]="item.sellPrice"
                                    step="0.01"
                                    [(ngModel)]="item.discountPrice"
                                    [name]="'discountPrice_' + i"
                                    class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                   placeholder="Enter discount" />
+                                   placeholder="Enter discount amount (e.g., 300)" />
+                            <p class="text-xs text-gray-500 mt-1">
+                                Final Price: Rs.{{(item.sellPrice - (item.discountPrice || 0)) | number:'1.2-2'}}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -107,21 +136,17 @@
                 class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
                 placeholder="Choose model" required [(ngModel)]="items.model" />
             <datalist id="modelOptions">
-                <!-- Apple -->
                 <option value="iPhone 6">iPhone 6</option>
                 <option value="iPhone 6s">iPhone 6s</option>
                 <option value="iPhone 6 Plus">iPhone 6 Plus</option>
                 <option value="iPhone 7">iPhone 7</option>
                 <option value="iPhone X">iPhone X</option>
-                <!-- Samsung -->
                 <option value="Galaxy S21">Galaxy S21</option>
                 <option value="Galaxy Note 10">Galaxy Note 10</option>
                 <option value="Galaxy A52">Galaxy A52</option>
-                <!-- Redmi -->
                 <option value="Note 9">Note 9</option>
                 <option value="Note 10 Pro">Note 10 Pro</option>
                 <option value="Redmi 12C">Redmi 12C</option>
-                <!-- Nokia -->
                 <option value="Nokia 6.1">Nokia 6.1</option>
                 <option value="Nokia 7.2">Nokia 7.2</option>
                 <option value="Nokia 3.4">Nokia 3.4</option>
@@ -145,10 +170,13 @@
         </div>
 
         <div>
-            <label for="discountprice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">Discount Price</label>
+            <label for="discountprice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">Discount Amount</label>
             <input type="number" id="discountprice" name="discountprice" min="0" step="0.01" [(ngModel)]="deatils.discountPrice"
                 class="bg-yellow-50 border border-yellow-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-yellow-00 dark:border-yellow-600 dark:text-dark"
-                placeholder="Enter discount" />
+                placeholder="Enter discount amount (e.g., 300)" />
+            <p class="text-xs text-gray-500 mt-1">
+                Final Price: Rs.{{((items.sellPrice || 0) - (deatils.discountPrice || 0)) | number:'1.2-2'}}
+            </p>
         </div>
 
         <div>
@@ -191,6 +219,17 @@
             <div><span class="font-medium text-gray-700">Date:</span> {{items.date}}</div>
             <div><span class="font-medium text-gray-700">Name:</span> {{deatils.name}}</div>
             <div><span class="font-medium text-gray-700">Phone:</span> {{deatils.phoneNumber}}</div>
+            <!-- ✅ WARRANTY DISPLAY -->
+            <div>
+              <span class="font-medium text-gray-700">🛡️ Warranty:</span> 
+              <span class="ml-2 px-3 py-1 text-xs font-semibold rounded-full"
+                    [class.bg-green-100]="selectedWarranty !== 'No Warranty'"
+                    [class.text-green-800]="selectedWarranty !== 'No Warranty'"
+                    [class.bg-gray-100]="selectedWarranty === 'No Warranty'"
+                    [class.text-gray-800]="selectedWarranty === 'No Warranty'">
+                {{selectedWarranty}}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -226,7 +265,7 @@
           </div>
         </div>
 
-        <!-- Total Calculation -->
+        <!-- ✅ FIXED Total Calculation -->
         <div class="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
           <h4 class="text-lg font-medium text-gray-800 mb-3">Total Calculation</h4>
           <div class="text-sm space-y-2">
@@ -236,12 +275,14 @@
             </div>
             <div class="flex justify-between">
               <span>Total Discount:</span>
-              <span class="font-medium text-red-600">-Rs.{{calculateFinalTotal()}}</span>
+              <!-- ✅ CORRECT: Use calculateTotalDiscount() -->
+              <span class="font-medium text-red-600">-Rs.{{calculateTotalDiscount()}}</span>
             </div>
             <hr class="border-gray-300">
             <div class="flex justify-between text-lg font-bold">
               <span>Final Total:</span>
-              <span class="text-green-600">Rs.{{calculateTotalDiscount()}}</span>
+              <!-- ✅ CORRECT: Use calculateFinalTotal() -->
+              <span class="text-green-600">Rs.{{calculateFinalTotal()}}</span>
             </div>
           </div>
         </div>
@@ -289,7 +330,7 @@
               </svg>
               Customer Details
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
               <div class="flex items-center">
                 <span class="font-medium text-gray-700 w-16">Name:</span>
                 <span class="text-gray-900">{{deatils.name}}</span>
@@ -301,6 +342,15 @@
               <div class="flex items-center">
                 <span class="font-medium text-gray-700 w-16">Date:</span>
                 <span class="text-gray-900">{{receiptData.date}}</span>
+              </div>
+              <!-- ✅ WARRANTY ON RECEIPT -->
+              <div class="flex items-center">
+                <span class="font-medium text-gray-700 w-20">🛡️ Warranty:</span>
+                <span class="text-gray-900 font-semibold px-2 py-1 rounded"
+                      [class.bg-green-200]="selectedWarranty !== 'No Warranty'"
+                      [class.bg-gray-200]="selectedWarranty === 'No Warranty'">
+                  {{selectedWarranty}}
+                </span>
               </div>
             </div>
           </div>
@@ -325,7 +375,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Multiple Items -->
                   <tr *ngFor="let item of receiptData.items" class="bg-white border-b">
                     <td class="px-6 py-4 border-r border-gray-200">
                       <div class="font-medium text-gray-900">{{item.category}} - {{item.brand}} {{item.model}}</div>
@@ -340,15 +389,15 @@
                     </td>
                     <td class="px-4 py-4 text-center border-r border-gray-200 font-medium">{{item.sellQuantity}}</td>
                     <td class="px-4 py-4 text-right border-r border-gray-200 font-medium">Rs.{{item.sellPrice | number:'1.2-2'}}</td>
-                    <td class="px-4 py-4 text-right border-r border-gray-200 font-medium text-red-600">Rs.{{(item.itemTotal || 0) | number:'1.2-2'}}</td>
-                    <td class="px-4 py-4 text-right font-medium">Rs.{{receiptData.totalDiscount| number:'1.2-2'}}</td>
+                    <td class="px-4 py-4 text-right border-r border-gray-200 font-medium text-red-600">Rs.{{(item.discountPrice * item.sellQuantity) || 0 | number:'1.2-2'}}</td>
+                    <td class="px-4 py-4 text-right font-medium">Rs.{{item.itemTotal | number:'1.2-2'}}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
 
-          <!-- Totals Section -->
+          <!-- ✅ FIXED Totals Section -->
           <div class="mb-8">
             <div class="max-w-md ml-auto">
               <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
@@ -359,12 +408,14 @@
                   </div>
                   <div class="flex justify-between text-sm text-red-600" *ngIf="receiptData.totalDiscount > 0">
                     <span>Total Discount:</span>
-                    <span class="font-medium">-Rs.{{receiptData.finalTotal | number:'1.2-2'}}</span>
+                    <!-- ✅ CORRECT: Show totalDiscount -->
+                    <span class="font-medium">-Rs.{{receiptData.totalDiscount | number:'1.2-2'}}</span>
                   </div>
                   <hr class="border-gray-300">
                   <div class="flex justify-between text-xl font-bold text-gray-900">
                     <span>TOTAL:</span>
-                    <span class="text-green-600">Rs.{{receiptData.totalDiscount | number:'1.2-2'}}</span>
+                    <!-- ✅ CORRECT: Show finalTotal -->
+                    <span class="text-green-600">Rs.{{receiptData.finalTotal | number:'1.2-2'}}</span>
                   </div>
                 </div>
               </div>
@@ -378,6 +429,15 @@
                 <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path>
               </svg>
               <h4 class="text-lg font-semibold text-gray-800">Thank you for your business With Woow Mobile!</h4>
+            </div>
+            <!-- ✅ WARRANTY NOTICE ON RECEIPT -->
+            <div *ngIf="selectedWarranty !== 'No Warranty'" class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p class="text-sm font-semibold text-green-800">
+                🛡️ This product comes with {{selectedWarranty}} warranty
+              </p>
+              <p class="text-xs text-green-600 mt-1">
+                Keep this receipt for warranty claims and returns
+              </p>
             </div>
             <p class="text-sm text-gray-500 mb-2">For any queries or returns, please contact us with this receipt.</p>
             <p class="text-s text-gray-400">071-0539476</p>
