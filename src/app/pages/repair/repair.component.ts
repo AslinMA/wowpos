@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-
+import { environment } from '../../../environments/environment';
 
 interface Product {
   id: number;
@@ -14,7 +14,6 @@ interface Product {
   sellPrice: number;
 }
 
-
 interface RepairPart {
   partId?: number;
   partName: string;
@@ -23,10 +22,9 @@ interface RepairPart {
   partModel: string;
   quantity: number;
   unitPrice: number;
-  discount: number; 
+  discount: number;
   totalPrice: number;
 }
-
 
 interface Repair {
   repairId?: number;
@@ -44,7 +42,6 @@ interface Repair {
   updatedAt?: string;
   parts?: RepairPart[];
 }
-
 
 @Component({
   selector: 'app-repair',
@@ -82,7 +79,7 @@ export class RepairComponent implements OnInit {
   // Update During Repair
   additionalIssues: string = '';
   additionalLaborCharge: number = 0;
-   partDiscount: number = 0; 
+  partDiscount: number = 0;
 
   constructor(private http: HttpClient) {}
 
@@ -92,7 +89,7 @@ export class RepairComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.http.get<Product[]>('/api/product').subscribe({
+    this.http.get<Product[]>(`${environment.apiUrl}/api/product`).subscribe({
       next: (data) => {
         this.products = data;
       },
@@ -101,7 +98,7 @@ export class RepairComponent implements OnInit {
   }
 
   loadRepairRecords(): void {
-    this.http.get<Repair[]>('/api/repair').subscribe({
+    this.http.get<Repair[]>(`${environment.apiUrl}/api/repair`).subscribe({
       next: (data) => {
         this.repairRecords = data;
       },
@@ -146,13 +143,14 @@ export class RepairComponent implements OnInit {
         totalPrice: total,
       });
     }
-       // Reset part form
+
+    // Reset part form
     this.selectedProductId = null;
     this.partQuantity = 1;
-    this.partDiscount = 0;  // ✅ RESET DISCOUNT
+    this.partDiscount = 0;
   }
+
   // Add More Parts to Existing Repair (During Progress)
- // Updated: Add More Parts with Discount
   addMoreParts(): void {
     if (!this.selectedRepair) return;
 
@@ -181,20 +179,19 @@ export class RepairComponent implements OnInit {
       totalPrice: total,
     };
 
-    // Create update payload
     const updateData = {
       parts: [newPart],
     };
 
     console.log('Adding part to repair:', updateData);
 
-    this.http.put<Repair>(`/api/repair/${this.selectedRepair.repairId}`, updateData).subscribe({
+    this.http.put<Repair>(`${environment.apiUrl}/api/repair/${this.selectedRepair.repairId}`, updateData).subscribe({
       next: (response) => {
         alert('Part added successfully!');
         this.selectedRepair = response;
         this.selectedProductId = null;
         this.partQuantity = 1;
-        this.partDiscount = 0;  // ✅ RESET DISCOUNT
+        this.partDiscount = 0;
         this.loadProducts();
         this.loadRepairRecords();
       },
@@ -204,7 +201,6 @@ export class RepairComponent implements OnInit {
       },
     });
   }
-
 
   // Update Labor Charge and Issues
   updateRepairDetails(): void {
@@ -227,7 +223,7 @@ export class RepairComponent implements OnInit {
 
     console.log('Updating repair details:', updateData);
 
-    this.http.put<Repair>(`/api/repair/${this.selectedRepair.repairId}`, updateData).subscribe({
+    this.http.put<Repair>(`${environment.apiUrl}/api/repair/${this.selectedRepair.repairId}`, updateData).subscribe({
       next: (response) => {
         alert('Repair updated successfully!');
         this.selectedRepair = response;
@@ -275,7 +271,7 @@ export class RepairComponent implements OnInit {
 
     console.log('Creating repair:', repair);
 
-    this.http.post<Repair>('/api/repair', repair).subscribe({
+    this.http.post<Repair>(`${environment.apiUrl}/api/repair`, repair).subscribe({
       next: (response) => {
         alert(`Repair created successfully! Repair ID: REP-${response.repairId}`);
         this.selectedRepair = response;
@@ -302,7 +298,7 @@ export class RepairComponent implements OnInit {
     this.laborCharge = 0;
     this.addedParts = [];
     this.selectedProductId = null;
-    this.partDiscount = 0;  // ✅ RESET DISCOUNT
+    this.partDiscount = 0;
     this.additionalIssues = '';
     this.additionalLaborCharge = 0;
   }
@@ -317,22 +313,19 @@ export class RepairComponent implements OnInit {
     console.log('🔍 Searching for:', this.searchRepairCode);
 
     this.http
-      .get<any>(`/api/repair/search?query=${encodeURIComponent(this.searchRepairCode)}`)
+      .get<any>(`${environment.apiUrl}/api/repair/search?query=${encodeURIComponent(this.searchRepairCode)}`)
       .subscribe({
         next: (data) => {
           console.log('Search results:', data);
 
-          // If multiple results, show them in the table
           if (Array.isArray(data) && data.length > 1) {
             this.repairRecords = data;
-            this.page = 1; // Reset to first page
+            this.page = 1;
             alert(`Found ${data.length} repairs. Check the table below.`);
           } else if (Array.isArray(data) && data.length === 1) {
-            // Single result - show details
             this.selectedRepair = data[0];
             this.currentView = 'details';
           } else if (!Array.isArray(data)) {
-            // Single repair object
             this.selectedRepair = data;
             this.currentView = 'details';
           }
@@ -358,7 +351,7 @@ export class RepairComponent implements OnInit {
       status: newStatus,
     };
 
-    this.http.patch(`/api/repair/${this.selectedRepair.repairId}/status`, update).subscribe({
+    this.http.patch(`${environment.apiUrl}/api/repair/${this.selectedRepair.repairId}/status`, update).subscribe({
       next: () => {
         alert('Status updated successfully!');
         if (this.selectedRepair) {
