@@ -8,6 +8,7 @@ import { ChartData, ChartOptions } from 'chart.js';
 // keep your original model import
 import { sellDeatils } from '../../models/sellDeatils';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 interface WeeklyPoint { date: string; revenue: number; items: number; }
 interface WeeklyTotal { 
@@ -165,7 +166,7 @@ public chartOptions: ChartOptions<'bar'> = {
 
   // ---------------- Data Fetch ---------------- //
   private loadWeeklySales(): void {
-    this.http.get<WeeklyPoint[]>('http://localhost:8080/api/admin/metrics/weekly-sales').subscribe({
+    this.http.get<WeeklyPoint[]>(`${environment.apiUrl}/api/admin/metrics/weekly-sales`).subscribe({
       next: (rows) => {
         const labels = (rows || []).map(r => r.date);
         const data = (rows || []).map(r => r.revenue);
@@ -180,7 +181,7 @@ public chartOptions: ChartOptions<'bar'> = {
 
   // NEW: Load weekly total from backend
   private loadWeeklyTotal(): void {
-    this.http.get<WeeklyTotal>('http://localhost:8080/api/admin/metrics/weekly-total').subscribe({
+    this.http.get<WeeklyTotal>(`${environment.apiUrl}/api/admin/metrics/weekly-sales`).subscribe({
       next: (data) => {
         this.totalSalesThisWeek = data.totalRevenue || 0;
         this.weeklyGrowth = data.growthPercentage || 0;
@@ -195,7 +196,7 @@ public chartOptions: ChartOptions<'bar'> = {
   }
 
   loadSalesDetails(): void {
-    this.http.get<sellDeatils[]>('http://localhost:8080/api/saler-retrive').subscribe({
+    this.http.get<sellDeatils[]>(`${environment.apiUrl}/api/saler-retrive`).subscribe({
       next: (data) => {
        this.salesDetails = (data || []);
         this.recomputeAll();
