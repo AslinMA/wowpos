@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { sellDeatils } from '../../models/sellDeatils';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { sharedCartDataService } from '../SharedCartDataService';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-selling',
@@ -312,7 +313,7 @@ export class SellingComponent implements OnInit {
 
         console.log("💾 Sending sale data:", JSON.stringify(saleData, null, 2));
 
-        this.http.post('http://localhost:8080/api/sale', saleData).subscribe({
+        this.http.post(`${environment.apiUrl}/api/sale`, saleData).subscribe({
             next: (res) => {
               console.log("saleData.date", saleData.date);
               console.log("saleData.date", saleData.items);
@@ -360,7 +361,7 @@ export class SellingComponent implements OnInit {
 
         console.log("💾 Sending single sale data:", JSON.stringify(saleData, null, 2));
 
-        this.http.post("http://localhost:8080/api/sale", saleData).subscribe({
+        this.http.post(`${environment.apiUrl}/api/sale`, saleData).subscribe({
             next: (res) => {
                 console.log("✅ Sale saved successfully:", res);
                 alert("Your selling was completed...!");
