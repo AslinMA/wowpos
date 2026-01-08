@@ -59,7 +59,7 @@ export class DamageComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.http.get<Product[]>('/api/product').subscribe({
+    this.http.get<Product[]>(`${environment.apiUrl}/api/product`).subscribe({
       next: (data) => {
         this.products = data;
       },
@@ -68,7 +68,7 @@ export class DamageComponent implements OnInit {
   }
 
   loadDamageRecords(): void {
-    this.http.get<Damage[]>('/api/damage').subscribe({
+    this.http.get<Damage[]>(`${environment.apiUrl}/api/damage`).subscribe({
       next: (data) => {
         this.damageRecords = data;
       },
