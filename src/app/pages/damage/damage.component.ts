@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 interface Product {
   id: number;
@@ -110,7 +111,7 @@ export class DamageComponent implements OnInit {
       lossAmount: this.calculateLoss(),
     };
 
-    this.http.post('/api/damage', damage).subscribe({
+    this.http.post(`${environment.apiUrl}/api/damage`, damage).subscribe({
   next: () => {
     alert('Damage recorded successfully!');
     this.resetForm();
