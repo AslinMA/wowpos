@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 interface Sale {
   transactionId: string;
@@ -33,22 +34,22 @@ interface ReturnRecord {
   originalSaleDate: string;
   customerName: string;
   customerPhone: string;
-  
+
   returnedCategory: string;
   returnedBrand: string;
   returnedModel: string;
   returnedQuantity: number;
-  
+
   replacementProductId: number;
   replacementCategory: string;
   replacementBrand: string;
   replacementModel: string;
-  
+
   warrantyPeriod: string;
   withinWarranty: boolean;
   claimType: string;
   lossAmount: number;
-  
+
   notes: string;
 }
 
@@ -59,24 +60,21 @@ interface ReturnRecord {
   templateUrl: './return.component.html',
 })
 export class ReturnComponent implements OnInit {
-  // Search
+  private apiUrl = `${environment.apiUrl}/api`;
+
   searchTransactionId: string = '';
   selectedSale: Sale | null = null;
   warrantyStatus: { valid: boolean; daysRemaining: number; message: string } | null = null;
 
-  // Products for replacement
   products: Product[] = [];
   filteredProducts: Product[] = [];
   selectedReplacementId: number | null = null;
 
-  // Return form
   claimType: string = 'Supplier Claim';
   notes: string = '';
 
-  // Return records
   returnRecords: ReturnRecord[] = [];
 
-  // Pagination
   page = 1;
   pageSize = 10;
 
@@ -88,7 +86,7 @@ export class ReturnComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.http.get<Product[]>('/api/product').subscribe({
+    this.http.get<Product[]>(`${this.apiUrl}/product`).subscribe({
       next: (data) => {
         this.products = data;
       },
@@ -97,7 +95,7 @@ export class ReturnComponent implements OnInit {
   }
 
   loadReturnRecords(): void {
-    this.http.get<ReturnRecord[]>('/api/return').subscribe({
+    this.http.get<ReturnRecord[]>(`${this.apiUrl}/return`).subscribe({
       next: (data) => {
         this.returnRecords = data;
       },
@@ -105,68 +103,58 @@ export class ReturnComponent implements OnInit {
     });
   }
 
-searchSale(): void {
-  if (!this.searchTransactionId.trim()) {
-    alert('Please enter Phone Number, Name, or Transaction ID');
-    return;
+  searchSale(): void {
+    if (!this.searchTransactionId.trim()) {
+      alert('Please enter Phone Number, Name, or Transaction ID');
+      return;
+    }
+
+    this.http.get<any>(`${this.apiUrl}/sale/search?query=${encodeURIComponent(this.searchTransactionId)}`).subscribe({
+      next: (data) => {
+        if (Array.isArray(data) && data.length > 1) {
+          this.handleMultipleResults(data);
+        } else if (Array.isArray(data) && data.length === 1) {
+          this.selectedSale = data[0];
+          this.checkWarranty();
+          this.filterReplacementProducts();
+        } else if (!Array.isArray(data)) {
+          this.selectedSale = data;
+          this.checkWarranty();
+          this.filterReplacementProducts();
+        }
+      },
+      error: (e) => {
+        console.error('Sale not found', e);
+        alert('No sales found for: ' + this.searchTransactionId);
+        this.selectedSale = null;
+        this.warrantyStatus = null;
+      },
+    });
   }
 
-  console.log('🔍 Searching for:', this.searchTransactionId);
+  handleMultipleResults(sales: Sale[]): void {
+    let message = 'Multiple sales found. Select one:\n\n';
 
-  // Use new search endpoint
-  this.http.get<any>(`/api/sale/search?query=${encodeURIComponent(this.searchTransactionId)}`).subscribe({
-    next: (data) => {
-      console.log('Search results:', data);
-      
-      // If multiple results, show selection dialog
-      if (Array.isArray(data) && data.length > 1) {
-        this.handleMultipleResults(data);
-      } else if (Array.isArray(data) && data.length === 1) {
-        // Single result
-        this.selectedSale = data[0];
+    sales.forEach((sale, index) => {
+      message += `${index + 1}. ${sale.transactionId}\n`;
+      message += `   Customer: ${sale.customerName}\n`;
+      message += `   Product: ${sale.brand} ${sale.model}\n`;
+      message += `   Date: ${new Date(sale.saleDate).toLocaleDateString()}\n\n`;
+    });
+
+    const selection = prompt(message + 'Enter number (1-' + sales.length + '):');
+
+    if (selection) {
+      const index = parseInt(selection, 10) - 1;
+      if (index >= 0 && index < sales.length) {
+        this.selectedSale = sales[index];
         this.checkWarranty();
         this.filterReplacementProducts();
-      } else if (!Array.isArray(data)) {
-        // Single sale object (from old endpoint)
-        this.selectedSale = data;
-        this.checkWarranty();
-        this.filterReplacementProducts();
+      } else {
+        alert('Invalid selection');
       }
-    },
-    error: (e) => {
-      console.error('Sale not found', e);
-      alert('No sales found for: ' + this.searchTransactionId);
-      this.selectedSale = null;
-      this.warrantyStatus = null;
-    },
-  });
-}
-
-// Handle multiple search results
-handleMultipleResults(sales: Sale[]): void {
-  let message = 'Multiple sales found. Select one:\n\n';
-  
-  sales.forEach((sale, index) => {
-    message += `${index + 1}. ${sale.transactionId}\n`;
-    message += `   Customer: ${sale.customerName}\n`;
-    message += `   Product: ${sale.brand} ${sale.model}\n`;
-    message += `   Date: ${new Date(sale.saleDate).toLocaleDateString()}\n\n`;
-  });
-  
-  const selection = prompt(message + 'Enter number (1-' + sales.length + '):');
-  
-  if (selection) {
-    const index = parseInt(selection) - 1;
-    if (index >= 0 && index < sales.length) {
-      this.selectedSale = sales[index];
-      this.checkWarranty();
-      this.filterReplacementProducts();
-    } else {
-      alert('Invalid selection');
     }
   }
-}
-
 
   checkWarranty(): void {
     if (!this.selectedSale) return;
@@ -212,7 +200,6 @@ handleMultipleResults(sales: Sale[]): void {
       return;
     }
 
-    // Filter products matching same category, brand, model
     this.filteredProducts = this.products.filter(
       (p) =>
         p.category === this.selectedSale!.category &&
@@ -238,10 +225,10 @@ handleMultipleResults(sales: Sale[]): void {
     }
 
     if (!this.warrantyStatus?.valid) {
-      const confirm = window.confirm(
+      const confirmed = window.confirm(
         'This item is not within warranty period. Do you still want to process the return?'
       );
-      if (!confirm) return;
+      if (!confirmed) return;
     }
 
     if (!this.selectedReplacementId) {
@@ -261,26 +248,22 @@ handleMultipleResults(sales: Sale[]): void {
       originalSaleDate: this.selectedSale.saleDate,
       customerName: this.selectedSale.customerName,
       customerPhone: this.selectedSale.customerPhone,
-
       returnedCategory: this.selectedSale.category,
       returnedBrand: this.selectedSale.brand,
       returnedModel: this.selectedSale.model,
       returnedQuantity: this.selectedSale.quantity,
-
       replacementProductId: replacement.id,
       replacementCategory: replacement.category,
       replacementBrand: replacement.brand,
       replacementModel: replacement.model,
-
       warrantyPeriod: this.selectedSale.warrantyPeriod,
       withinWarranty: this.warrantyStatus?.valid || false,
       claimType: this.claimType,
       lossAmount: this.calculateLoss(),
-
       notes: this.notes,
     };
 
-    this.http.post('/api/return', returnRecord).subscribe({
+    this.http.post(`${this.apiUrl}/return`, returnRecord).subscribe({
       next: () => {
         alert('Return processed successfully!');
         this.resetForm();
@@ -304,7 +287,6 @@ handleMultipleResults(sales: Sale[]): void {
     this.notes = '';
   }
 
-  // Pagination
   pagedRecords(): ReturnRecord[] {
     const start = (this.page - 1) * this.pageSize;
     return this.returnRecords.slice(start, start + this.pageSize);

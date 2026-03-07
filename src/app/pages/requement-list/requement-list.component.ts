@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 export interface Requirement {
-  id?: number;           // returned by backend, used for delete
-  date: string;          // yyyy-MM-dd
+  id?: number;
+  date: string;
   category: string;
   brand: string;
   model: string;
@@ -31,12 +32,12 @@ interface PageResponse<T> {
 })
 export class RequementListComponent implements OnInit {
 
-  
   constructor(private http: HttpClient) {}
+
+  private apiUrl = `${environment.apiUrl}/api/requirement`;
 
   items: Requirement[] = [];
 
-  // bindable form model (keep strings for inputs, cast on save)
   form = {
     date: '',
     category: '',
@@ -63,7 +64,6 @@ export class RequementListComponent implements OnInit {
       return;
     }
 
-    // Build payload that matches backend entity: RequirementItemEntity
     const payload: Requirement = {
       date: this.form.date,
       category: this.form.category.trim(),
@@ -75,12 +75,11 @@ export class RequementListComponent implements OnInit {
     };
 
     this.saving = true;
-    this.http.post<Requirement>('/api/requirement', payload).subscribe({
+    this.http.post<Requirement>(this.apiUrl, payload).subscribe({
       next: (saved) => {
         this.saving = false;
         alert('Your item was added!');
-        // add/refresh UI
-        this.items.unshift(saved); // saved contains id from backend
+        this.items.unshift(saved);
         this.form = { date: '', category: '', brand: '', model: '', quantity: '', price: '', notes: '' };
       },
       error: (e) => {
@@ -93,7 +92,7 @@ export class RequementListComponent implements OnInit {
 
   loadFromServer(page = 0): void {
     this.loading = true;
-    this.http.get<PageResponse<Requirement>>(`/api/requirement/items?page=${page}&size=50`).subscribe({
+    this.http.get<PageResponse<Requirement>>(`${this.apiUrl}/items?page=${page}&size=50`).subscribe({
       next: (res) => {
         this.loading = false;
         this.items = res.content;
@@ -108,11 +107,12 @@ export class RequementListComponent implements OnInit {
 
   remove(i: number): void {
     const row = this.items[i];
-    if (!row?.id) { // unsaved optimistic row
+    if (!row?.id) {
       this.items.splice(i, 1);
       return;
     }
-    this.http.delete(`/api/requirement/items/${row.id}`).subscribe({
+
+    this.http.delete(`${this.apiUrl}/items/${row.id}`).subscribe({
       next: () => this.items.splice(i, 1),
       error: (e) => {
         console.error(e);

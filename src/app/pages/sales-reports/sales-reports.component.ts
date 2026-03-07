@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { BaseChartDirective } from 'ng2-charts';
 import type { ChartData, ChartOptions } from 'chart.js';
+import { environment } from '../../../environments/environment';
 
 // Matches org.kmaihome.pos.models.saleDetailsForDisaply
 interface BackendSaleRow {
@@ -50,6 +51,9 @@ interface Row {
   templateUrl: './sales-reports.component.html',
 })
 export class SalesReportsComponent implements OnInit {
+
+  private apiUrl = `${environment.apiUrl}/api`;
+
   constructor(private http: HttpClient) { }
 
   // Filters
@@ -108,7 +112,7 @@ export class SalesReportsComponent implements OnInit {
 
   // ===== Backend =====
   fetch(): void {
-    this.http.get<BackendSaleRow[]>('/api/saler-retrive').subscribe({
+    this.http.get<BackendSaleRow[]>(`${this.apiUrl}/saler-retrive`).subscribe({
       next: (data) => {
         this.raw = data || [];
         this.rows = this.normalize(this.raw);
