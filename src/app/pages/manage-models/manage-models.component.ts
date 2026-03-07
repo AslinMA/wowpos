@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Model } from '../../models/model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-manage-models',
@@ -30,7 +31,7 @@ export class ManageModelsComponent implements OnInit {
   filterCategory: string = '';
 
   // Base URL
-  private apiUrl = 'http://localhost:8080/api/models';
+  //private apiUrl = 'http://localhost:8080/api/models';
 
   constructor(private http: HttpClient) {}
 
@@ -40,7 +41,7 @@ export class ManageModelsComponent implements OnInit {
 
   // Load all models
   loadModels() {
-    this.http.get<Model[]>(this.apiUrl).subscribe({
+    this.http.get<Model[]>(environment.apiUrl).subscribe({
       next: (data) => {
         this.models = data;
         this.filteredModels = data;
@@ -69,7 +70,7 @@ export class ManageModelsComponent implements OnInit {
 
     console.log('Sending model:', payload);
 
-    this.http.post<Model>(this.apiUrl, payload).subscribe({
+    this.http.post<Model>(environment.apiUrl, payload).subscribe({
       next: (data) => {
         alert('Model added successfully!');
         this.loadModels();
@@ -92,7 +93,7 @@ export class ManageModelsComponent implements OnInit {
 
   // Update model
   updateModel() {
-    this.http.put<Model>(`${this.apiUrl}/${this.currentModel.id}`, this.currentModel).subscribe({
+    this.http.put<Model>(`${environment.apiUrl}/${this.currentModel.id}`, this.currentModel).subscribe({
       next: (data) => {
         alert('Model updated successfully!');
         this.loadModels();
@@ -108,7 +109,7 @@ export class ManageModelsComponent implements OnInit {
   // Delete model
   deleteModel(id: number) {
     if (confirm('Are you sure you want to delete this model?')) {
-      this.http.delete(`${this.apiUrl}/${id}`).subscribe({
+      this.http.delete(`${environment.apiUrl}/${id}`).subscribe({
         next: () => {
           alert('Model deleted successfully!');
           this.loadModels();
