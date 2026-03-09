@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 interface NetProfitSummary {
   fromDate: string;
@@ -37,6 +38,8 @@ export class NetProfitReportsComponent implements OnInit {
   error = '';
   summary: NetProfitSummary | null = null;
 
+  private apiUrl = `${environment.apiUrl}/api/reports/net-profit`;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -48,7 +51,7 @@ export class NetProfitReportsComponent implements OnInit {
     this.error = '';
     this.summary = null;
 
-    let url = 'http://localhost:8080/api/reports/net-profit';
+    let url = this.apiUrl;
     if (this.fromDate && this.toDate) {
       url += `?from=${this.fromDate}&to=${this.toDate}`;
     }
