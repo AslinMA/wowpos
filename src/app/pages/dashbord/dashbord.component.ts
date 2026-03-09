@@ -1,6 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+
+type Band = 'CRITICAL' | 'WARN' | 'INFO' | 'LOW';
+
+interface LowStockItem {
+  id: number;
+  category: string;
+  brand: string;
+  model: string;
+  quantity: number;
+  band: Band;
+}
 
 @Component({
   selector: 'app-dashbord',
@@ -8,11 +21,31 @@ import { Router } from '@angular/router';
   templateUrl: './dashbord.component.html',
   styleUrl: './dashbord.component.css'
 })
-export class DashbordComponent {
+export class DashbordComponent implements OnInit {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
   isSidebarOpen = false;
+  notificationCount = 0;
+
+  private apiUrl = `${environment.apiUrl}/api`;
+
+  ngOnInit(): void {
+    this.loadNotificationCount();
+  }
+
+  loadNotificationCount(): void {
+    this.http.get<LowStockItem[]>(`${this.apiUrl}/notifications/low-stock?max=15`).subscribe({
+      next: (rows) => {
+        const items = rows || [];
+        this.notificationCount = items.filter(item => item.quantity <= 5).length;
+      },
+      error: (err) => {
+        console.error('Failed to load notification count', err);
+        this.notificationCount = 0;
+      }
+    });
+  }
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
