@@ -9,17 +9,15 @@ import { Router } from '@angular/router';
   styleUrl: './dashbord.component.css'
 })
 export class DashbordComponent {
-  
- constructor(private router: Router) {}
- isSidebarOpen = false; // Sidebar closed by default on mobile
 
- 
+  constructor(private router: Router) {}
+
+  isSidebarOpen = false;
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
 
-  // Close sidebar when clicking a link (mobile only)
   closeSidebarOnMobile() {
     if (window.innerWidth < 1024) {
       this.isSidebarOpen = false;
@@ -27,42 +25,62 @@ export class DashbordComponent {
   }
 
   goToAdmin() {
-    // Add your login logic here (e.g., check credentials)
-
-    // After successful login, navigate to dashboard
+    this.closeSidebarOnMobile();
     this.router.navigate(['/admin']);
   }
+
   goToModels() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/manage-models']);
   }
+
   goTologin() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/login']);
   }
+
   goToSingUp() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/singup']);
   }
-    goToAddItems() {
+
+  goToAddItems() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/add-items']);
   }
-   goToRequement() {
+
+  goToRequement() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/requement']);
   }
+
   goToInventory() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/inventory']);
   }
-   goToSelling() {
+
+  goToSelling() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/selling']);
   }
+
   goToNotification() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/notification']);
   }
-   goToDamage() {
+
+  goToDamage() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/damage']);
   }
+
   goToReturn() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/return']);
   }
-    goToRepair() {
+
+  goToRepair() {
+    this.closeSidebarOnMobile();
     this.router.navigate(['/repair']);
   }
 }

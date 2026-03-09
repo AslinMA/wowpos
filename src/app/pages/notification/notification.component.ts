@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 type Band = 'CRITICAL' | 'WARN' | 'INFO' | 'LOW';
 
@@ -11,8 +12,8 @@ interface LowStockItem {
   category: string;
   brand: string;
   model: string;
-  quantity: number;   // parsed on backend
-  band: Band;         // computed band
+  quantity: number;
+  band: Band;
 }
 
 @Component({
@@ -22,17 +23,17 @@ interface LowStockItem {
   templateUrl: './notification.component.html',
 })
 export class NotificationComponent implements OnInit {
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {}
 
   all: LowStockItem[] = [];
   visible: LowStockItem[] = [];
 
-  // default: show only qty < 3
+  private apiUrl = `${environment.apiUrl}/api`;
+
   filterMode: 'critical' | 'upto5' | 'upto10' | 'upto15' | 'all' = 'critical';
 
   ngOnInit(): void {
-    // fetch all bands up to 15; backend returns band per item
-    this.http.get<LowStockItem[]>('/api/notifications/low-stock?max=15').subscribe({
+    this.http.get<LowStockItem[]>(`${this.apiUrl}/notifications/low-stock?max=15`).subscribe({
       next: (rows) => { this.all = rows || []; this.applyFilter(); },
       error: (e) => { console.error('low-stock fetch failed', e); this.all = []; this.applyFilter(); }
     });
@@ -40,7 +41,7 @@ export class NotificationComponent implements OnInit {
 
   applyFilter(): void {
     const map = {
-      critical: (r: LowStockItem) => r.band === 'CRITICAL',        // <3
+      critical: (r: LowStockItem) => r.band === 'CRITICAL',
       upto5: (r: LowStockItem) => r.quantity <= 5,
       upto10: (r: LowStockItem) => r.quantity <= 10,
       upto15: (r: LowStockItem) => r.quantity <= 15,
@@ -48,8 +49,7 @@ export class NotificationComponent implements OnInit {
     };
     this.visible = (this.all || []).filter(map[this.filterMode]);
   }
-  
-  // Theme colors per band (matching your alert palette)
+
   colorClasses(band: Band) {
     switch (band) {
       case 'CRITICAL': return 'text-red-800 border-red-300 bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800';
