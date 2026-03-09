@@ -181,19 +181,19 @@ public chartOptions: ChartOptions<'bar'> = {
 
   // NEW: Load weekly total from backend
   private loadWeeklyTotal(): void {
-    this.http.get<WeeklyTotal>(`${environment.apiUrl}/api/admin/metrics/weekly-sales`).subscribe({
-      next: (data) => {
-        this.totalSalesThisWeek = data.totalRevenue || 0;
-        this.weeklyGrowth = data.growthPercentage || 0;
-        console.log('Weekly total:', data);
-      },
-      error: (err) => {
-        console.error('Error loading weekly total:', err);
-        this.totalSalesThisWeek = 0;
-        this.weeklyGrowth = 0;
-      }
-    });
-  }
+  this.http.get<WeeklyTotal>(`${environment.apiUrl}/api/admin/metrics/weekly-total`).subscribe({
+    next: (data) => {
+      this.totalSalesThisWeek = Number(data.totalRevenue) || 0;
+      this.weeklyGrowth = Number(data.growthPercentage) || 0;
+      console.log('Weekly total:', data);
+    },
+    error: (err) => {
+      console.error('Error loading weekly total:', err);
+      this.totalSalesThisWeek = 0;
+      this.weeklyGrowth = 0;
+    }
+  });
+}
 
   loadSalesDetails(): void {
     this.http.get<sellDeatils[]>(`${environment.apiUrl}/api/saler-retrive`).subscribe({
