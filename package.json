@@ -21,6 +21,7 @@
     "apexcharts": "^3.54.1",
     "chart.js": "^4.5.0",
     "flowbite": "^3.1.2",
+    "html5-qrcode": "^2.3.8",
     "ng2-charts": "^6.0.1",
     "ngx-apexcharts": "^0.7.1",
     "rxjs": "~7.8.0",

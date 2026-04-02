@@ -1,9 +1,10 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { addItems } from '../../models/addItems';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 
 @Component({
   selector: 'app-add-items',
@@ -12,15 +13,21 @@ import { environment } from '../../../environments/environment';
   templateUrl: './add-items.component.html',
   styleUrl: './add-items.component.css'
 })
-export class AddItemsComponent implements OnInit {
+export class AddItemsComponent implements OnInit, OnDestroy {
 
-  public items: addItems = new addItems(0, "", "", "", "", "", "", "", "");
+  public items: addItems = new addItems(0, '', '', '', '', '', '', '', '');
 
-  // Dynamic dropdown data
   categories: string[] = [];
   brands: string[] = [];
   models: string[] = [];
   locations: string[] = [];
+
+  scannedCode: string = '';
+  scannerActive: boolean = false;
+  scannerError: string = '';
+
+  private html5QrCode: Html5Qrcode | null = null;
+  private readonly scannerElementId = 'reader';
 
   constructor(private http: HttpClient) { }
 
@@ -30,7 +37,10 @@ export class AddItemsComponent implements OnInit {
     this.loadLocations();
   }
 
-  // Load categories from backend
+  ngOnDestroy(): void {
+    this.stopScanner();
+  }
+
   loadCategories() {
     this.http.get<string[]>(`${environment.apiUrl}/api/categories`).subscribe({
       next: (data) => {
@@ -43,7 +53,6 @@ export class AddItemsComponent implements OnInit {
     });
   }
 
-  // Load brands from backend
   loadBrands() {
     this.http.get<string[]>(`${environment.apiUrl}/api/brands`).subscribe({
       next: (data) => {
@@ -56,7 +65,6 @@ export class AddItemsComponent implements OnInit {
     });
   }
 
-  // Load locations from backend
   loadLocations() {
     this.http.get<string[]>(`${environment.apiUrl}/api/locations`).subscribe({
       next: (data) => {
@@ -69,7 +77,6 @@ export class AddItemsComponent implements OnInit {
     });
   }
 
-  // When category changes, clear brand and model
   onCategoryChange() {
     this.items.brand = '';
     this.items.model = '';
@@ -77,10 +84,9 @@ export class AddItemsComponent implements OnInit {
     console.log('Category changed to:', this.items.category);
   }
 
-  // When brand changes, load models for that brand
   onBrandChange() {
-    this.items.model = ''; // Clear model selection
-    
+    this.items.model = '';
+
     if (this.items.brand) {
       this.loadModelsByBrand(this.items.brand);
     } else {
@@ -88,9 +94,10 @@ export class AddItemsComponent implements OnInit {
     }
   }
 
-  // Load models filtered by brand
   loadModelsByBrand(brand: string) {
-    this.http.get<string[]>(`${environment.apiUrl}/api/models-by-brand?brand=${brand}`).subscribe({
+    const params = new HttpParams().set('brand', brand);
+
+    this.http.get<string[]>(`${environment.apiUrl}/api/models-by-brand`, { params }).subscribe({
       next: (data) => {
         this.models = data;
         console.log(`Models loaded for ${brand}:`, data);
@@ -102,37 +109,104 @@ export class AddItemsComponent implements OnInit {
     });
   }
 
-  // Submit form
+  async startScanner() {
+  this.scannerError = '';
+  this.scannedCode = '';
+
+  if (this.scannerActive) {
+    return;
+  }
+
+  try {
+    this.scannerActive = true;
+
+    const cameras = await Html5Qrcode.getCameras();
+    if (!cameras || cameras.length === 0) {
+      this.scannerError = 'No camera found on this device.';
+      this.scannerActive = false;
+      return;
+    }
+
+    this.html5QrCode = new Html5Qrcode(this.scannerElementId, {
+      formatsToSupport: [
+        Html5QrcodeSupportedFormats.CODE_128,
+        Html5QrcodeSupportedFormats.CODE_39,
+        Html5QrcodeSupportedFormats.CODE_93,
+        Html5QrcodeSupportedFormats.EAN_13,
+        Html5QrcodeSupportedFormats.EAN_8,
+        Html5QrcodeSupportedFormats.UPC_A,
+        Html5QrcodeSupportedFormats.UPC_E,
+        Html5QrcodeSupportedFormats.QR_CODE
+      ],
+      verbose: false
+    });
+
+    await this.html5QrCode.start(
+      { facingMode: 'environment' },
+      {
+        fps: 10,
+        qrbox: { width: 250, height: 140 },
+        aspectRatio: 1.777
+      },
+      async (decodedText: string) => {
+        this.scannedCode = decodedText;
+        this.items.model = decodedText;
+        await this.stopScanner();
+      },
+      () => {}
+    );
+  } catch (error) {
+    console.error('Scanner start error:', error);
+    this.scannerError = 'Unable to start camera scanner. Please allow camera access and try again.';
+    this.scannerActive = false;
+  }
+}
+
+  async stopScanner() {
+    try {
+      if (this.html5QrCode && this.scannerActive) {
+        await this.html5QrCode.stop();
+        await this.html5QrCode.clear();
+      }
+    } catch (error) {
+      console.error('Scanner stop error:', error);
+    } finally {
+      this.html5QrCode = null;
+      this.scannerActive = false;
+    }
+  }
+
+  useScannedCodeForModel() {
+    if (this.scannedCode) {
+      this.items.model = this.scannedCode;
+    }
+  }
+
   addItems() {
-    // Validation
     if (
       !this.items.date ||
       !this.items.category ||
       !this.items.brand ||
       !this.items.model ||
-      !this.items.quantity ||
-      !this.items.buyPrice ||
-      !this.items.sellPrice ||
+      this.items.quantity <= 0 ||
+      this.items.buyPrice < 0 ||
+      this.items.sellPrice < 0 ||
       !this.items.location
     ) {
-      alert("Please fill in all fields before submitting.");
+      alert('Please fill in all fields correctly before submitting.');
       return;
     }
 
-    // Submit to backend
     this.http.post(`${environment.apiUrl}/api/product`, this.items).subscribe({
-      next: (res) => {
-        alert("Your Item Was Added Successfully!");
-        // Reset form
-        this.items = new addItems(0, "", "", "", "", "", "", "", "");
+      next: () => {
+        alert('Your Item Was Added Successfully!');
+        this.items = new addItems(0, '', '', '', '', '', '', '', '');
         this.models = [];
-        
-        // Optionally, navigate to inventory page or reload data
-        // this.router.navigate(['/inventory']);
+        this.scannedCode = '';
       },
       error: (err) => {
         console.error('Error adding item:', err);
-        alert("Error adding item. Please try again.");
+        alert('Error adding item. Please try again.');
       }
     });
   }
