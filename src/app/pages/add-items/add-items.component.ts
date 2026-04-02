@@ -42,7 +42,20 @@ export class AddItemsComponent implements OnInit, OnDestroy {
   }
 
   getTodayDate(): string {
-  return new Date().toISOString().split('T')[0];
+    return new Date().toISOString().split('T')[0];
+  }
+
+moveFocusById(event: Event, fieldId: string): void {
+  event.preventDefault();
+
+  const field = document.getElementById(fieldId) as HTMLElement | null;
+  if (!field) return;
+
+  field.focus();
+
+  if (field instanceof HTMLInputElement) {
+    setTimeout(() => field.select(), 0);
+  }
 }
 
   loadCategories() {
@@ -114,57 +127,57 @@ export class AddItemsComponent implements OnInit, OnDestroy {
   }
 
   async startScanner() {
-  this.scannerError = '';
-  this.scannedCode = '';
+    this.scannerError = '';
+    this.scannedCode = '';
 
-  if (this.scannerActive) {
-    return;
-  }
-
-  try {
-    this.scannerActive = true;
-
-    const cameras = await Html5Qrcode.getCameras();
-    if (!cameras || cameras.length === 0) {
-      this.scannerError = 'No camera found on this device.';
-      this.scannerActive = false;
+    if (this.scannerActive) {
       return;
     }
 
-    this.html5QrCode = new Html5Qrcode(this.scannerElementId, {
-      formatsToSupport: [
-        Html5QrcodeSupportedFormats.CODE_128,
-        Html5QrcodeSupportedFormats.CODE_39,
-        Html5QrcodeSupportedFormats.CODE_93,
-        Html5QrcodeSupportedFormats.EAN_13,
-        Html5QrcodeSupportedFormats.EAN_8,
-        Html5QrcodeSupportedFormats.UPC_A,
-        Html5QrcodeSupportedFormats.UPC_E,
-        Html5QrcodeSupportedFormats.QR_CODE
-      ],
-      verbose: false
-    });
+    try {
+      this.scannerActive = true;
 
-    await this.html5QrCode.start(
-      { facingMode: 'environment' },
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 140 },
-        aspectRatio: 1.777
-      },
-      async (decodedText: string) => {
-        this.scannedCode = decodedText;
-        this.items.model = decodedText;
-        await this.stopScanner();
-      },
-      () => {}
-    );
-  } catch (error) {
-    console.error('Scanner start error:', error);
-    this.scannerError = 'Unable to start camera scanner. Please allow camera access and try again.';
-    this.scannerActive = false;
+      const cameras = await Html5Qrcode.getCameras();
+      if (!cameras || cameras.length === 0) {
+        this.scannerError = 'No camera found on this device.';
+        this.scannerActive = false;
+        return;
+      }
+
+      this.html5QrCode = new Html5Qrcode(this.scannerElementId, {
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.CODE_128,
+          Html5QrcodeSupportedFormats.CODE_39,
+          Html5QrcodeSupportedFormats.CODE_93,
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.EAN_8,
+          Html5QrcodeSupportedFormats.UPC_A,
+          Html5QrcodeSupportedFormats.UPC_E,
+          Html5QrcodeSupportedFormats.QR_CODE
+        ],
+        verbose: false
+      });
+
+      await this.html5QrCode.start(
+        { facingMode: 'environment' },
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 140 },
+          aspectRatio: 1.777
+        },
+        async (decodedText: string) => {
+          this.scannedCode = decodedText;
+          this.items.model = decodedText;
+          await this.stopScanner();
+        },
+        () => { }
+      );
+    } catch (error) {
+      console.error('Scanner start error:', error);
+      this.scannerError = 'Unable to start camera scanner. Please allow camera access and try again.';
+      this.scannerActive = false;
+    }
   }
-}
 
   async stopScanner() {
     try {
@@ -214,5 +227,5 @@ export class AddItemsComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
+
 }
