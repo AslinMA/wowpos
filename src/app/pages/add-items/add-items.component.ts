@@ -41,6 +41,10 @@ export class AddItemsComponent implements OnInit, OnDestroy {
     this.stopScanner();
   }
 
+  getTodayDate(): string {
+  return new Date().toISOString().split('T')[0];
+}
+
   loadCategories() {
     this.http.get<string[]>(`${environment.apiUrl}/api/categories`).subscribe({
       next: (data) => {
@@ -210,4 +214,5 @@ export class AddItemsComponent implements OnInit, OnDestroy {
       }
     });
   }
+  
 }
