@@ -32,6 +32,7 @@ export class AddItemsComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
+      this.items.date = this.getTodayDate();
     this.loadCategories();
     this.loadBrands();
     this.loadLocations();
