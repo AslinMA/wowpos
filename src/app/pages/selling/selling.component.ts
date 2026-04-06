@@ -237,42 +237,135 @@ export class SellingComponent implements OnInit {
   }
 
   printReceipt() {
-    const printStyles = `
-      <style>
-        @media print {
-          body * { visibility: hidden; }
-          #receiptContent, #receiptContent * { visibility: visible; }
-          #receiptContent { 
-            position: absolute; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            background: white !important;
-          }
-          .bg-yellow-50 { background-color: #fefce8 !important; -webkit-print-color-adjust: exact; }
-          .bg-yellow-100 { background-color: #fef3c7 !important; -webkit-print-color-adjust: exact; }
-          .bg-gray-50 { background-color: #f9fafb !important; -webkit-print-color-adjust: exact; }
-          .text-yellow-500 { color: #eab308 !important; -webkit-print-color-adjust: exact; }
-          .text-green-600 { color: #dc2626 !important; -webkit-print-color-adjust: exact; }
-          .border-yellow-300 { border-color: #fde047 !important; }
-          table { border-collapse: collapse !important; }
-          th, td { border: 1px solid #000 !important; padding: 8px !important; }
+  const printStyles = `
+    <style>
+      @page {
+        size: 80mm auto;
+        margin: 0;
+      }
+
+      @media print {
+        html, body {
+          width: 80mm;
+          margin: 0 !important;
+          padding: 0 !important;
+          background: #fff !important;
         }
-      </style>
-    `;
 
-    const styleSheet = document.createElement('style');
-    styleSheet.innerHTML = printStyles;
-    document.head.appendChild(styleSheet);
+        body * {
+          visibility: hidden !important;
+        }
 
-    window.print();
+        #receiptContent, #receiptContent * {
+          visibility: visible !important;
+        }
 
-    setTimeout(() => {
-      document.head.removeChild(styleSheet);
-    }, 1000);
+        #receiptContent {
+          position: static !important;
+          width: 72mm !important;
+          max-width: 72mm !important;
+          margin: 0 auto !important;
+          padding: 2mm !important;
+          background: #fff !important;
+          color: #000 !important;
+          box-shadow: none !important;
+          border: none !important;
+          overflow: visible !important;
+          font-family: Arial, sans-serif !important;
+          font-size: 11px !important;
+          line-height: 1.25 !important;
+        }
 
-    this.saveSalesData();
-  }
+        /* remove heavy colors/backgrounds */
+        .bg-yellow-50,
+        .bg-yellow-100,
+        .bg-gray-50,
+        .bg-green-50,
+        .bg-blue-50,
+        .bg-white {
+          background: #fff !important;
+        }
+
+        .text-yellow-500,
+        .text-green-600,
+        .text-red-600,
+        .text-gray-500,
+        .text-gray-600,
+        .text-gray-700,
+        .text-gray-800,
+        .text-gray-900,
+        .text-blue-800,
+        .text-green-800 {
+          color: #000 !important;
+        }
+
+        .border,
+        .border-t,
+        .border-b,
+        .border-yellow-200,
+        .border-yellow-300,
+        .border-gray-200,
+        .border-gray-300,
+        .border-green-200,
+        .border-blue-200 {
+          border-color: #000 !important;
+        }
+
+        /* thermal printers hate heavy graphics */
+        svg {
+          display: none !important;
+        }
+
+        img {
+          max-width: 40mm !important;
+          max-height: 20mm !important;
+          object-fit: contain !important;
+        }
+
+        table {
+          width: 100% !important;
+          border-collapse: collapse !important;
+          table-layout: fixed !important;
+        }
+
+        th, td {
+          border: none !important;
+          padding: 2px 0 !important;
+          font-size: 10px !important;
+          color: #000 !important;
+          word-break: break-word !important;
+        }
+
+        thead tr {
+          border-bottom: 1px solid #000 !important;
+        }
+
+        tbody tr {
+          border-bottom: 1px dashed #000 !important;
+        }
+
+        .rounded,
+        .rounded-lg,
+        .shadow-xl {
+          border-radius: 0 !important;
+          box-shadow: none !important;
+        }
+      }
+    </style>
+  `;
+
+  const styleSheet = document.createElement('style');
+  styleSheet.innerHTML = printStyles;
+  document.head.appendChild(styleSheet);
+
+  window.print();
+
+  setTimeout(() => {
+    document.head.removeChild(styleSheet);
+  }, 1000);
+
+  this.saveSalesData();
+}
 
   generateTransactionId(): string {
     const timestamp = Date.now();
