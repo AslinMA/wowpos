@@ -57,7 +57,7 @@ export class SellingComponent implements OnInit {
       }
     }
     this.items.date = this.getTodayDate();
-    
+
     let cartData = this.sharedCartDataService.getCartItems();
     if (cartData && cartData.length > 0) {
       this.itemsArray = cartData.map(item => ({
@@ -144,7 +144,7 @@ export class SellingComponent implements OnInit {
         const sellQty = Number(item.sellQuantity) || 1;
         const unitPrice = Number(item.sellPrice) || 0;
         const discountPerUnit = Number(item.discountPrice) || 0;
-        
+
         const itemSubtotal = sellQty * unitPrice;
         const itemDiscount = sellQty * discountPerUnit;
         const itemTotal = itemSubtotal - itemDiscount;
@@ -163,7 +163,7 @@ export class SellingComponent implements OnInit {
       const sellQty = Number(this.quantity) || 1;
       const unitPrice = Number(this.items.sellPrice) || 0;
       const discountPerUnit = Number(this.deatils.discountPrice) || 0;
-      
+
       const itemSubtotal = sellQty * unitPrice;
       const itemDiscount = sellQty * discountPerUnit;
       const itemTotal = itemSubtotal - itemDiscount;
@@ -236,136 +236,275 @@ export class SellingComponent implements OnInit {
     return 'RCP-' + Date.now().toString().slice(-8);
   }
 
-  printReceipt() {
-  const printStyles = `
+  private esc(value: any): string {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  private buildReceiptHtml(): string {
+    const items = this.receiptData?.items || [];
+
+    const itemsHtml = items.map((item: any) => `
+    <tr>
+      <td class="left item-name">
+        ${this.esc(item.category)} ${this.esc(item.brand)} ${this.esc(item.model)}
+      </td>
+      <td class="center qty">${Number(item.sellQuantity || 1)}</td>
+      <td class="right price">Rs.${Number(item.itemTotal || 0).toFixed(2)}</td>
+    </tr>
+  `).join('');
+
+    const warrantyRow =
+      this.selectedWarranty && this.selectedWarranty !== 'No Warranty'
+        ? `
+        <div class="row">
+          <span>Warranty</span>
+          <span>${this.esc(this.selectedWarranty)}</span>
+        </div>
+      `
+        : '';
+
+    return `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Receipt</title>
     <style>
       @page {
-        size: 80mm auto;
+        size: 80mm 127mm; /* 5 inch height */
         margin: 0;
       }
 
-      @media print {
-        html, body {
-          width: 80mm;
-          margin: 0 !important;
-          padding: 0 !important;
-          background: #fff !important;
-        }
+      html, body {
+        width: 80mm;
+        height: 127mm;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #fff;
+        color: #000;
+        font-family: monospace, Arial, sans-serif;
+      }
 
-        body * {
-          visibility: hidden !important;
-        }
+      * {
+        box-sizing: border-box;
+      }
 
-        #receiptContent, #receiptContent * {
-          visibility: visible !important;
-        }
+      .receipt {
+        width: 80mm;
+        height: 127mm;
+        padding: 4mm 4mm 3mm 4mm;
+        overflow: hidden;
+      }
 
-        #receiptContent {
-          position: static !important;
-          width: 72mm !important;
-          max-width: 72mm !important;
-          margin: 0 auto !important;
-          padding: 2mm !important;
-          background: #fff !important;
-          color: #000 !important;
-          box-shadow: none !important;
-          border: none !important;
-          overflow: visible !important;
-          font-family: Arial, sans-serif !important;
-          font-size: 11px !important;
-          line-height: 1.25 !important;
-        }
+      .center {
+        text-align: center;
+      }
 
-        /* remove heavy colors/backgrounds */
-        .bg-yellow-50,
-        .bg-yellow-100,
-        .bg-gray-50,
-        .bg-green-50,
-        .bg-blue-50,
-        .bg-white {
-          background: #fff !important;
-        }
+      .left {
+        text-align: left;
+      }
 
-        .text-yellow-500,
-        .text-green-600,
-        .text-red-600,
-        .text-gray-500,
-        .text-gray-600,
-        .text-gray-700,
-        .text-gray-800,
-        .text-gray-900,
-        .text-blue-800,
-        .text-green-800 {
-          color: #000 !important;
-        }
+      .right {
+        text-align: right;
+      }
 
-        .border,
-        .border-t,
-        .border-b,
-        .border-yellow-200,
-        .border-yellow-300,
-        .border-gray-200,
-        .border-gray-300,
-        .border-green-200,
-        .border-blue-200 {
-          border-color: #000 !important;
-        }
+      .title {
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-top: 2mm;
+      }
 
-        /* thermal printers hate heavy graphics */
-        svg {
-          display: none !important;
-        }
+      .shop {
+        font-size: 12px;
+        margin-top: 1mm;
+      }
 
-        img {
-          max-width: 40mm !important;
-          max-height: 20mm !important;
-          object-fit: contain !important;
-        }
+      .small {
+        font-size: 10px;
+        line-height: 1.3;
+      }
 
-        table {
-          width: 100% !important;
-          border-collapse: collapse !important;
-          table-layout: fixed !important;
-        }
+      .divider {
+        border-top: 1px dashed #000;
+        margin: 3mm 0;
+      }
 
-        th, td {
-          border: none !important;
-          padding: 2px 0 !important;
-          font-size: 10px !important;
-          color: #000 !important;
-          word-break: break-word !important;
-        }
+      .section-title {
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 2mm;
+      }
 
-        thead tr {
-          border-bottom: 1px solid #000 !important;
-        }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 11px;
+        line-height: 1.4;
+        margin: 1mm 0;
+      }
 
-        tbody tr {
-          border-bottom: 1px dashed #000 !important;
-        }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        margin-top: 1mm;
+      }
 
-        .rounded,
-        .rounded-lg,
-        .shadow-xl {
-          border-radius: 0 !important;
-          box-shadow: none !important;
-        }
+      th, td {
+        font-size: 10px;
+        padding: 1.2mm 0;
+        vertical-align: top;
+      }
+
+      th {
+        border-bottom: 1px dashed #000;
+      }
+
+      .item-name {
+        width: 56%;
+        word-break: break-word;
+      }
+
+      .qty {
+        width: 12%;
+      }
+
+      .price {
+        width: 32%;
+      }
+
+      .totals .row {
+        font-size: 11px;
+      }
+
+      .grand-total {
+        font-size: 16px;
+        font-weight: 700;
+        margin-top: 2mm;
+      }
+
+      .footer {
+        margin-top: 4mm;
+        text-align: center;
+        font-size: 10px;
+        line-height: 1.35;
+      }
+
+      img.logo {
+        max-width: 26mm;
+        max-height: 12mm;
+        object-fit: contain;
+        margin: 0 auto 2mm auto;
+        display: block;
       }
     </style>
+  </head>
+  <body>
+    <div class="receipt">
+      <div class="center">
+        <img src="/logo.jpg" class="logo" alt="Logo" />
+        <div class="title">SALES<br>RECEIPT</div>
+        <div class="shop">Woow Mobile</div>
+        <div class="small">Accessories Store</div>
+        <div class="small">
+          ${this.esc(new Date(this.receiptData.timestamp).toLocaleString())}
+        </div>
+        <div class="small">
+          Receipt: ${this.esc(this.receiptData.receiptNumber)}
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section-title">Customer</div>
+      <div class="row">
+        <span>Name</span>
+        <span>${this.esc(this.deatils.name)}</span>
+      </div>
+      <div class="row">
+        <span>Phone</span>
+        <span>${this.esc(this.deatils.phoneNumber)}</span>
+      </div>
+      <div class="row">
+        <span>Date</span>
+        <span>${this.esc(this.receiptData.date)}</span>
+      </div>
+      ${warrantyRow}
+
+      <div class="divider"></div>
+
+      <div class="section-title">Items</div>
+      <table>
+        <thead>
+          <tr>
+            <th class="left item-name">Item</th>
+            <th class="center qty">Q</th>
+            <th class="right price">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsHtml}
+        </tbody>
+      </table>
+
+      <div class="divider"></div>
+
+      <div class="totals">
+        <div class="row">
+          <span>Subtotal</span>
+          <span>Rs.${Number(this.receiptData.subtotal || 0).toFixed(2)}</span>
+        </div>
+        <div class="row">
+          <span>Discount</span>
+          <span>Rs.${Number(this.receiptData.totalDiscount || 0).toFixed(2)}</span>
+        </div>
+        <div class="row grand-total">
+          <span>TOTAL</span>
+          <span>Rs.${Number(this.receiptData.finalTotal || 0).toFixed(2)}</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="footer">
+        Thank you for your business<br>
+        Woow Mobile<br>
+        071-0539476
+      </div>
+    </div>
+  </body>
+  </html>
   `;
+  }
 
-  const styleSheet = document.createElement('style');
-  styleSheet.innerHTML = printStyles;
-  document.head.appendChild(styleSheet);
+  printReceipt() {
+    const printWindow = window.open('', '_blank', 'width=400,height=700');
 
-  window.print();
+    if (!printWindow) {
+      alert('Popup blocked. Please allow popups.');
+      return;
+    }
 
-  setTimeout(() => {
-    document.head.removeChild(styleSheet);
-  }, 1000);
+    printWindow.document.open();
+    printWindow.document.write(this.buildReceiptHtml());
+    printWindow.document.close();
 
-  this.saveSalesData();
-}
+    printWindow.focus();
+
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+      this.saveSalesData();
+    }, 500);
+  }
 
   generateTransactionId(): string {
     const timestamp = Date.now();
@@ -378,94 +517,94 @@ export class SellingComponent implements OnInit {
     const transactionId = this.generateTransactionId();
 
     if (this.itemsArray && this.itemsArray.length > 0) {
-        const saleData = {
-            name: this.deatils.name,
-            phoneNumber: this.deatils.phoneNumber,
-            date: this.items.date,
-            transactionId: transactionId,
-            warrantyPeriod: this.selectedWarranty,
-            items: this.itemsArray.map(item => {
-                const sellQty = Number(item.sellQuantity) || 1;
-                const unitPrice = Number(item.sellPrice) || 0;
-                const discountPerUnit = Number(item.discountPrice) || 0;
-                
-                // Final price after discount per unit
-                const finalPricePerItem = unitPrice - discountPerUnit;
+      const saleData = {
+        name: this.deatils.name,
+        phoneNumber: this.deatils.phoneNumber,
+        date: this.items.date,
+        transactionId: transactionId,
+        warrantyPeriod: this.selectedWarranty,
+        items: this.itemsArray.map(item => {
+          const sellQty = Number(item.sellQuantity) || 1;
+          const unitPrice = Number(item.sellPrice) || 0;
+          const discountPerUnit = Number(item.discountPrice) || 0;
 
-                return {
-                    productId: item.id,
-                    category: item.category,
-                    brand: item.brand,
-                    model: item.model,
-                    quantity: sellQty,
-                    sellPrice: unitPrice,
-                    discountedPrice: finalPricePerItem
-                };
-            })
-        };
+          // Final price after discount per unit
+          const finalPricePerItem = unitPrice - discountPerUnit;
 
-        console.log("💾 Sending sale data:", JSON.stringify(saleData, null, 2));
+          return {
+            productId: item.id,
+            category: item.category,
+            brand: item.brand,
+            model: item.model,
+            quantity: sellQty,
+            sellPrice: unitPrice,
+            discountedPrice: finalPricePerItem
+          };
+        })
+      };
 
-        this.http.post(`${environment.apiUrl}/api/sale`, saleData).subscribe({
-            next: (res) => {
-              console.log("saleData.date", saleData.date);
-              console.log("saleData.date", saleData.items);
-              console.log("", saleData.date);
-              console.log("", saleData.date);
-              console.log("", saleData.date);
-              console.log("", saleData.date);
-              console.log("", saleData.date);
-              console.log("", saleData.date);
-              console.log("", saleData.date);
-                console.log("✅ Sale saved successfully:", res);
+      console.log("💾 Sending sale data:", JSON.stringify(saleData, null, 2));
 
-                alert("All sales completed successfully!");
-            },
-            error: (err) => {
-                console.error("❌ Full error:", err);
-                console.error("Status:", err.status);
-                console.error("Message:", err.error);
-                alert("Error occurred while saving sale data. Check browser console (F12).");
-            }
-        });
+      this.http.post(`${environment.apiUrl}/api/sale`, saleData).subscribe({
+        next: (res) => {
+          console.log("saleData.date", saleData.date);
+          console.log("saleData.date", saleData.items);
+          console.log("", saleData.date);
+          console.log("", saleData.date);
+          console.log("", saleData.date);
+          console.log("", saleData.date);
+          console.log("", saleData.date);
+          console.log("", saleData.date);
+          console.log("", saleData.date);
+          console.log("✅ Sale saved successfully:", res);
+
+          alert("All sales completed successfully!");
+        },
+        error: (err) => {
+          console.error("❌ Full error:", err);
+          console.error("Status:", err.status);
+          console.error("Message:", err.error);
+          alert("Error occurred while saving sale data. Check browser console (F12).");
+        }
+      });
     } else {
-        // Single item sale
-        const sellQty = Number(this.quantity) || 1;
-        const unitPrice = Number(this.items.sellPrice) || 0;
-        const discountPerUnit = Number(this.deatils.discountPrice) || 0;
-        const finalPricePerItem = unitPrice - discountPerUnit;
+      // Single item sale
+      const sellQty = Number(this.quantity) || 1;
+      const unitPrice = Number(this.items.sellPrice) || 0;
+      const discountPerUnit = Number(this.deatils.discountPrice) || 0;
+      const finalPricePerItem = unitPrice - discountPerUnit;
 
-        const saleData = {
-            name: this.deatils.name,
-            phoneNumber: this.deatils.phoneNumber,
-            date: this.items.date,
-            transactionId: transactionId,
-            warrantyPeriod: this.selectedWarranty,
-            items: [{
-                productId: this.items.id,
-                category: this.items.category,
-                brand: this.items.brand,
-                model: this.items.model,
-                quantity: sellQty,
-                sellPrice: unitPrice,
-                discountedPrice: finalPricePerItem
-            }]
-        };
+      const saleData = {
+        name: this.deatils.name,
+        phoneNumber: this.deatils.phoneNumber,
+        date: this.items.date,
+        transactionId: transactionId,
+        warrantyPeriod: this.selectedWarranty,
+        items: [{
+          productId: this.items.id,
+          category: this.items.category,
+          brand: this.items.brand,
+          model: this.items.model,
+          quantity: sellQty,
+          sellPrice: unitPrice,
+          discountedPrice: finalPricePerItem
+        }]
+      };
 
-        console.log("💾 Sending single sale data:", JSON.stringify(saleData, null, 2));
+      console.log("💾 Sending single sale data:", JSON.stringify(saleData, null, 2));
 
-        this.http.post(`${environment.apiUrl}/api/sale`, saleData).subscribe({
-            next: (res) => {
-                console.log("✅ Sale saved successfully:", res);
-                alert("Your selling was completed...!");
-            },
-            error: (err) => {
-                console.error("❌ Full error:", err);
-                console.error("Status:", err.status);
-                console.error("Message:", err.error);
-                alert("Error occurred while saving sale data. Check browser console (F12).");
-            }
-        });
+      this.http.post(`${environment.apiUrl}/api/sale`, saleData).subscribe({
+        next: (res) => {
+          console.log("✅ Sale saved successfully:", res);
+          alert("Your selling was completed...!");
+        },
+        error: (err) => {
+          console.error("❌ Full error:", err);
+          console.error("Status:", err.status);
+          console.error("Message:", err.error);
+          alert("Error occurred while saving sale data. Check browser console (F12).");
+        }
+      });
     }
   }
 

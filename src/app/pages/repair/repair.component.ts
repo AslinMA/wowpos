@@ -375,12 +375,274 @@ export class RepairComponent implements OnInit {
     return partsTotal + (repair.laborCharge || 0);
   }
 
-  // Print Bill
-  printBill(): void {
-    setTimeout(() => {
-      window.print();
-    }, 500);
+  private esc(value: any): string {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+private buildRepairBillHtml(): string {
+  const repair = this.selectedRepair;
+  if (!repair) return '';
+
+  const parts = repair.parts || [];
+
+  const partsHtml = parts.map((part: any) => `
+    <tr>
+      <td class="left part">${this.esc(part.partBrand)} ${this.esc(part.partModel)}</td>
+      <td class="center qty">${Number(part.quantity || 0)}</td>
+      <td class="right amt">Rs.${Number(part.totalPrice || 0).toFixed(2)}</td>
+    </tr>
+  `).join('');
+
+  const laborRow = Number(repair.laborCharge || 0) > 0
+    ? `
+      <div class="row">
+        <span>Labor</span>
+        <span>Rs.${Number(repair.laborCharge || 0).toFixed(2)}</span>
+      </div>
+    `
+    : '';
+
+  return `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Repair Bill</title>
+    <style>
+      @page {
+        size: 80mm 127mm;
+        margin: 0;
+      }
+
+      html, body {
+        width: 80mm;
+        height: 127mm;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #fff;
+        color: #000;
+        font-family: monospace, Arial, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      .receipt {
+        width: 80mm;
+        height: 127mm;
+        padding: 4mm;
+        overflow: hidden;
+      }
+
+      .center { text-align: center; }
+      .left { text-align: left; }
+      .right { text-align: right; }
+
+      .brand {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-top: 1mm;
+      }
+
+      .sub {
+        font-size: 10px;
+        line-height: 1.3;
+      }
+
+      .title {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 3mm 0 2mm 0;
+      }
+
+      .divider {
+        border-top: 1px dashed #000;
+        margin: 2.5mm 0;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 10px;
+        line-height: 1.4;
+        margin: 1mm 0;
+      }
+
+      .section {
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 1mm;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        margin-top: 1mm;
+      }
+
+      th, td {
+        font-size: 10px;
+        padding: 1mm 0;
+        vertical-align: top;
+      }
+
+      th {
+        border-bottom: 1px dashed #000;
+      }
+
+      .part {
+        width: 58%;
+        word-break: break-word;
+      }
+
+      .qty {
+        width: 12%;
+      }
+
+      .amt {
+        width: 30%;
+      }
+
+      .grand {
+        font-size: 15px;
+        font-weight: 700;
+        margin-top: 2mm;
+      }
+
+      .footer {
+        margin-top: 3mm;
+        text-align: center;
+        font-size: 10px;
+        line-height: 1.3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="receipt">
+      <div class="center">
+        <div class="brand">WoW Mobile</div>
+        <div class="sub">Phone Repair Service</div>
+        <div class="sub">071-0539476</div>
+        <div class="sub">Pitigala, Sri Lanka</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="center title">REPAIR BILL</div>
+
+      <div class="row">
+        <span>Repair ID</span>
+        <span>REP-${this.esc(repair.repairId)}</span>
+      </div>
+      <div class="row">
+        <span>Date</span>
+        <span>${this.esc(new Date(repair.repairDate || repair.createdAt || new Date()).toLocaleString())}</span>
+      </div>
+      <div class="row">
+        <span>Status</span>
+        <span>${this.esc(repair.status)}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">Customer</div>
+      <div class="row">
+        <span>Name</span>
+        <span>${this.esc(repair.customerName)}</span>
+      </div>
+      <div class="row">
+        <span>Phone</span>
+        <span>${this.esc(repair.customerPhone)}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">Device</div>
+      <div class="row">
+        <span>Model</span>
+        <span>${this.esc(repair.deviceBrand)} ${this.esc(repair.deviceModel)}</span>
+      </div>
+      <div class="row">
+        <span>Issue</span>
+        <span>${this.esc(repair.issueDescription)}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">Parts</div>
+      <table>
+        <thead>
+          <tr>
+            <th class="left part">Part</th>
+            <th class="center qty">Q</th>
+            <th class="right amt">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${partsHtml || `
+            <tr>
+              <td class="left part">No parts</td>
+              <td class="center qty">-</td>
+              <td class="right amt">Rs.0.00</td>
+            </tr>
+          `}
+        </tbody>
+      </table>
+
+      <div class="divider"></div>
+
+      ${laborRow}
+      <div class="row grand">
+        <span>TOTAL</span>
+        <span>Rs.${Number(repair.totalCost || this.calculateRepairTotal(repair) || 0).toFixed(2)}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="footer">
+        Thank you for choosing<br>
+        WoW Mobile
+      </div>
+    </div>
+  </body>
+  </html>
+  `;
+}
+
+printBill(): void {
+  if (!this.selectedRepair) {
+    alert('No repair selected');
+    return;
   }
+
+  const printWindow = window.open('', '_blank', 'width=420,height=720');
+
+  if (!printWindow) {
+    alert('Popup blocked. Please allow popups.');
+    return;
+  }
+
+  printWindow.document.open();
+  printWindow.document.write(this.buildRepairBillHtml());
+  printWindow.document.close();
+
+  printWindow.focus();
+
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 500);
+}
 
   // Pagination
   pagedRecords(): Repair[] {
