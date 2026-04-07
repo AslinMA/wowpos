@@ -246,9 +246,9 @@ export class SellingComponent implements OnInit {
   }
 
   private buildReceiptHtml(): string {
-    const items = this.receiptData?.items || [];
+  const items = this.receiptData?.items || [];
 
-    const itemsHtml = items.map((item: any) => `
+  const itemsHtml = items.map((item: any) => `
     <tr>
       <td class="item">${this.esc(item.category)} ${this.esc(item.brand)} ${this.esc(item.model)}</td>
       <td class="qty">${Number(item.sellQuantity || 1)}</td>
@@ -256,183 +256,238 @@ export class SellingComponent implements OnInit {
     </tr>
   `).join('');
 
-    const warrantyRow =
-      this.selectedWarranty && this.selectedWarranty !== 'No Warranty'
-        ? `<div class="row"><span>Warranty</span><span>${this.esc(this.selectedWarranty)}</span></div>`
-        : '';
+  const warrantyRow =
+    this.selectedWarranty && this.selectedWarranty !== 'No Warranty'
+      ? `<div class="row"><span>Warranty</span><span>${this.esc(this.selectedWarranty)}</span></div>`
+      : '';
 
-    return `
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Receipt</title>
-    <style>
-      @page {
-        size: 80mm auto;
-        margin: 0;
-      }
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Sales Receipt</title>
+  <style>
+    @page {
+      size: 80mm auto;
+      margin: 0;
+    }
 
-      html, body {
-        width: 80mm;
-        margin: 0;
-        padding: 0;
-        background: #fff;
-        color: #000;
-        font-family: "Courier New", monospace, Arial, sans-serif;
-      }
+    html, body {
+      width: 80mm;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #000;
+      font-family: "Courier New", monospace, Arial, sans-serif;
+    }
 
-      * { box-sizing: border-box; }
+    body {
+      display: flex;
+      justify-content: center;
+    }
 
-      .receipt {
-        width: 72mm;
-        margin: 0 auto;
-        padding: 3mm 0 2mm 0;
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      .center { text-align: center; }
-      .right { text-align: right; }
+    .receipt {
+      width: 68mm;
+      padding: 3mm 0 2.5mm 0;
+    }
 
-      .logo {
-        display: block;
-        margin: 0 auto 1mm auto;
-        max-width: 12mm;
-        max-height: 12mm;
-        object-fit: contain;
-      }
+    .center {
+      text-align: center;
+    }
 
-      .shop {
-        font-size: 13px;
-        font-weight: 700;
-        margin-bottom: 1mm;
-      }
+    .header {
+      margin-bottom: 1.5mm;
+    }
 
-      .title {
-        font-size: 18px;
-        font-weight: 700;
-        line-height: 1.1;
-        margin: 0 0 1mm 0;
-      }
+    .logo {
+      display: block;
+      width: 11mm;
+      height: 11mm;
+      margin: 0 auto 1mm auto;
+      object-fit: contain;
+    }
 
-      .meta {
-        font-size: 10px;
-        line-height: 1.25;
-      }
+    .brand {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin: 0;
+    }
 
-      .divider {
-        border-top: 1px dashed #000;
-        margin: 2mm 0;
-      }
+    .sub {
+      font-size: 10px;
+      margin-top: 0.5mm;
+      line-height: 1.2;
+    }
 
-      .section {
-        font-size: 11px;
-        font-weight: 700;
-        margin-bottom: 1mm;
-      }
+    .title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      margin: 1.2mm 0 1mm 0;
+      line-height: 1.1;
+    }
 
-      .row {
-        display: flex;
-        justify-content: space-between;
-        gap: 8px;
-        font-size: 11px;
-        line-height: 1.35;
-        margin: 0.8mm 0;
-      }
+    .meta {
+      font-size: 10px;
+      line-height: 1.3;
+    }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: fixed;
-        margin-top: 1mm;
-      }
+    .divider {
+      border-top: 1px dashed #000;
+      margin: 2mm 0;
+    }
 
-      th, td {
-        font-size: 10px;
-        padding: 0.8mm 0;
-        vertical-align: top;
-      }
+    .section {
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 1mm;
+      text-transform: uppercase;
+    }
 
-      th {
-        border-bottom: 1px dashed #000;
-        text-align: left;
-      }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6mm;
+      font-size: 11px;
+      line-height: 1.45;
+      margin: 0.8mm 0;
+    }
 
-      .item {
-        width: 58%;
-        word-break: break-word;
-      }
+    .row span:first-child {
+      flex: 1;
+    }
 
-      .qty {
-        width: 10%;
-        text-align: center;
-      }
+    .row span:last-child {
+      min-width: 28mm;
+      text-align: right;
+    }
 
-      .amt {
-        width: 32%;
-        text-align: right;
-      }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin-top: 1mm;
+    }
 
-      .total {
-        font-size: 15px;
-        font-weight: 700;
-        margin-top: 1mm;
-      }
+    th, td {
+      font-size: 10px;
+      padding: 1mm 0;
+      vertical-align: top;
+    }
 
-      .contact {
-        text-align: center;
-        font-size: 10px;
-        margin-top: 2mm;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="receipt">
-      <div class="center">
-        <img src="/logo.jpg" class="logo" alt="Logo" />
-        <div class="shop">Woow Mobile</div>
-        <div class="title">SALES RECEIPT</div>
-        <div class="meta">${this.esc(new Date(this.receiptData.timestamp).toLocaleString())}</div>
-        <div class="meta">Receipt: ${this.esc(this.receiptData.receiptNumber)}</div>
-      </div>
+    thead th {
+      border-bottom: 1px dashed #000;
+      font-weight: 700;
+    }
 
-      <div class="divider"></div>
+    .item {
+      width: 56%;
+      text-align: left;
+      word-break: break-word;
+    }
 
-      <div class="section">Customer</div>
-      <div class="row"><span>Name</span><span>${this.esc(this.deatils.name)}</span></div>
-      <div class="row"><span>Phone</span><span>${this.esc(this.deatils.phoneNumber)}</span></div>
-      <div class="row"><span>Date</span><span>${this.esc(this.receiptData.date)}</span></div>
-      ${warrantyRow}
+    .qty {
+      width: 12%;
+      text-align: center;
+    }
 
-      <div class="divider"></div>
+    .amt {
+      width: 32%;
+      text-align: right;
+    }
 
-      <div class="section">Items</div>
-      <table>
-        <thead>
-          <tr>
-            <th class="item">Item</th>
-            <th class="qty">Q</th>
-            <th class="amt">Amt</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${itemsHtml}
-        </tbody>
-      </table>
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 1mm;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
 
-      <div class="divider"></div>
+    .footer {
+      margin-top: 2.5mm;
+      text-align: center;
+    }
 
-      <div class="row"><span>Subtotal</span><span>Rs.${Number(this.receiptData.subtotal || 0).toFixed(2)}</span></div>
-      <div class="row"><span>Discount</span><span>Rs.${Number(this.receiptData.totalDiscount || 0).toFixed(2)}</span></div>
-      <div class="row total"><span>TOTAL</span><span>Rs.${Number(this.receiptData.finalTotal || 0).toFixed(2)}</span></div>
+    .thanks {
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
 
-      <div class="divider"></div>
-
-      <div class="contact">071-0539476</div>
+    .come,
+    .wa {
+      font-size: 10px;
+      line-height: 1.3;
+      margin-top: 0.8mm;
+    }
+  </style>
+</head>
+<body>
+  <div class="receipt">
+    <div class="header center">
+      <img src="/logo.jpg" class="logo" alt="Woow Mobile Logo" />
+      <div class="brand">Woow Mobile</div>
+      <div class="sub">Accessories Store</div>
+      <div class="title">SALES RECEIPT</div>
+      <div class="meta">${this.esc(new Date(this.receiptData.timestamp).toLocaleString())}</div>
+      <div class="meta">Receipt No: ${this.esc(this.receiptData.receiptNumber)}</div>
     </div>
-  </body>
-  </html>
+
+    <div class="divider"></div>
+
+    <div class="section">Customer</div>
+    <div class="row"><span>Name</span><span>${this.esc(this.deatils.name)}</span></div>
+    <div class="row"><span>Phone</span><span>${this.esc(this.deatils.phoneNumber)}</span></div>
+    <div class="row"><span>Date</span><span>${this.esc(this.receiptData.date)}</span></div>
+    ${warrantyRow}
+
+    <div class="divider"></div>
+
+    <div class="section">Items</div>
+    <table>
+      <thead>
+        <tr>
+          <th class="item">Item</th>
+          <th class="qty">Q</th>
+          <th class="amt">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${itemsHtml}
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <div class="row"><span>Subtotal</span><span>Rs.${Number(this.receiptData.subtotal || 0).toFixed(2)}</span></div>
+    <div class="row"><span>Discount</span><span>Rs.${Number(this.receiptData.totalDiscount || 0).toFixed(2)}</span></div>
+
+    <div class="total-row">
+      <span>TOTAL</span>
+      <span>Rs.${Number(this.receiptData.finalTotal || 0).toFixed(2)}</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="footer">
+      <div class="thanks">Thank you for visiting Woow Mobile</div>
+      <div class="come">Come again!</div>
+      <div class="wa">WhatsApp: 071-0539476</div>
+    </div>
+  </div>
+</body>
+</html>
   `;
-  }
+}
 
   printReceipt() {
     const printWindow = window.open('', '_blank', 'width=400,height=700');
