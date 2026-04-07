@@ -250,22 +250,15 @@ export class SellingComponent implements OnInit {
 
     const itemsHtml = items.map((item: any) => `
     <tr>
-      <td class="left item-name">
-        ${this.esc(item.category)} ${this.esc(item.brand)} ${this.esc(item.model)}
-      </td>
-      <td class="center qty">${Number(item.sellQuantity || 1)}</td>
-      <td class="right price">Rs.${Number(item.itemTotal || 0).toFixed(2)}</td>
+      <td class="item">${this.esc(item.category)} ${this.esc(item.brand)} ${this.esc(item.model)}</td>
+      <td class="qty">${Number(item.sellQuantity || 1)}</td>
+      <td class="amt">Rs.${Number(item.itemTotal || 0).toFixed(2)}</td>
     </tr>
   `).join('');
 
     const warrantyRow =
       this.selectedWarranty && this.selectedWarranty !== 'No Warranty'
-        ? `
-        <div class="row">
-          <span>Warranty</span>
-          <span>${this.esc(this.selectedWarranty)}</span>
-        </div>
-      `
+        ? `<div class="row"><span>Warranty</span><span>${this.esc(this.selectedWarranty)}</span></div>`
         : '';
 
     return `
@@ -276,70 +269,65 @@ export class SellingComponent implements OnInit {
     <title>Receipt</title>
     <style>
       @page {
-        size: 80mm 127mm; /* 5 inch height */
+        size: 80mm auto;
         margin: 0;
       }
 
       html, body {
         width: 80mm;
-        height: 127mm;
         margin: 0;
         padding: 0;
-        overflow: hidden;
         background: #fff;
         color: #000;
-        font-family: monospace, Arial, sans-serif;
+        font-family: "Courier New", monospace, Arial, sans-serif;
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
 
       .receipt {
-        width: 80mm;
-        height: 127mm;
-        padding: 4mm 4mm 3mm 4mm;
-        overflow: hidden;
+        width: 72mm;
+        margin: 0 auto;
+        padding: 3mm 0 2mm 0;
       }
 
-      .center {
-        text-align: center;
-      }
+      .center { text-align: center; }
+      .right { text-align: right; }
 
-      .left {
-        text-align: left;
-      }
-
-      .right {
-        text-align: right;
-      }
-
-      .title {
-        font-size: 22px;
-        font-weight: 700;
-        line-height: 1.1;
-        margin-top: 2mm;
+      .logo {
+        display: block;
+        margin: 0 auto 1mm auto;
+        max-width: 12mm;
+        max-height: 12mm;
+        object-fit: contain;
       }
 
       .shop {
-        font-size: 12px;
-        margin-top: 1mm;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 1mm;
       }
 
-      .small {
+      .title {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin: 0 0 1mm 0;
+      }
+
+      .meta {
         font-size: 10px;
-        line-height: 1.3;
+        line-height: 1.25;
       }
 
       .divider {
         border-top: 1px dashed #000;
-        margin: 3mm 0;
+        margin: 2mm 0;
       }
 
-      .section-title {
-        font-size: 12px;
+      .section {
+        font-size: 11px;
         font-weight: 700;
-        margin-bottom: 2mm;
+        margin-bottom: 1mm;
       }
 
       .row {
@@ -347,8 +335,8 @@ export class SellingComponent implements OnInit {
         justify-content: space-between;
         gap: 8px;
         font-size: 11px;
-        line-height: 1.4;
-        margin: 1mm 0;
+        line-height: 1.35;
+        margin: 0.8mm 0;
       }
 
       table {
@@ -360,50 +348,40 @@ export class SellingComponent implements OnInit {
 
       th, td {
         font-size: 10px;
-        padding: 1.2mm 0;
+        padding: 0.8mm 0;
         vertical-align: top;
       }
 
       th {
         border-bottom: 1px dashed #000;
+        text-align: left;
       }
 
-      .item-name {
-        width: 56%;
+      .item {
+        width: 58%;
         word-break: break-word;
       }
 
       .qty {
-        width: 12%;
+        width: 10%;
+        text-align: center;
       }
 
-      .price {
+      .amt {
         width: 32%;
+        text-align: right;
       }
 
-      .totals .row {
-        font-size: 11px;
-      }
-
-      .grand-total {
-        font-size: 16px;
+      .total {
+        font-size: 15px;
         font-weight: 700;
-        margin-top: 2mm;
+        margin-top: 1mm;
       }
 
-      .footer {
-        margin-top: 4mm;
+      .contact {
         text-align: center;
         font-size: 10px;
-        line-height: 1.35;
-      }
-
-      img.logo {
-        max-width: 26mm;
-        max-height: 12mm;
-        object-fit: contain;
-        margin: 0 auto 2mm auto;
-        display: block;
+        margin-top: 2mm;
       }
     </style>
   </head>
@@ -411,43 +389,29 @@ export class SellingComponent implements OnInit {
     <div class="receipt">
       <div class="center">
         <img src="/logo.jpg" class="logo" alt="Logo" />
-        <div class="title">SALES<br>RECEIPT</div>
         <div class="shop">Woow Mobile</div>
-        <div class="small">Accessories Store</div>
-        <div class="small">
-          ${this.esc(new Date(this.receiptData.timestamp).toLocaleString())}
-        </div>
-        <div class="small">
-          Receipt: ${this.esc(this.receiptData.receiptNumber)}
-        </div>
+        <div class="title">SALES RECEIPT</div>
+        <div class="meta">${this.esc(new Date(this.receiptData.timestamp).toLocaleString())}</div>
+        <div class="meta">Receipt: ${this.esc(this.receiptData.receiptNumber)}</div>
       </div>
 
       <div class="divider"></div>
 
-      <div class="section-title">Customer</div>
-      <div class="row">
-        <span>Name</span>
-        <span>${this.esc(this.deatils.name)}</span>
-      </div>
-      <div class="row">
-        <span>Phone</span>
-        <span>${this.esc(this.deatils.phoneNumber)}</span>
-      </div>
-      <div class="row">
-        <span>Date</span>
-        <span>${this.esc(this.receiptData.date)}</span>
-      </div>
+      <div class="section">Customer</div>
+      <div class="row"><span>Name</span><span>${this.esc(this.deatils.name)}</span></div>
+      <div class="row"><span>Phone</span><span>${this.esc(this.deatils.phoneNumber)}</span></div>
+      <div class="row"><span>Date</span><span>${this.esc(this.receiptData.date)}</span></div>
       ${warrantyRow}
 
       <div class="divider"></div>
 
-      <div class="section-title">Items</div>
+      <div class="section">Items</div>
       <table>
         <thead>
           <tr>
-            <th class="left item-name">Item</th>
-            <th class="center qty">Q</th>
-            <th class="right price">Amount</th>
+            <th class="item">Item</th>
+            <th class="qty">Q</th>
+            <th class="amt">Amt</th>
           </tr>
         </thead>
         <tbody>
@@ -457,28 +421,13 @@ export class SellingComponent implements OnInit {
 
       <div class="divider"></div>
 
-      <div class="totals">
-        <div class="row">
-          <span>Subtotal</span>
-          <span>Rs.${Number(this.receiptData.subtotal || 0).toFixed(2)}</span>
-        </div>
-        <div class="row">
-          <span>Discount</span>
-          <span>Rs.${Number(this.receiptData.totalDiscount || 0).toFixed(2)}</span>
-        </div>
-        <div class="row grand-total">
-          <span>TOTAL</span>
-          <span>Rs.${Number(this.receiptData.finalTotal || 0).toFixed(2)}</span>
-        </div>
-      </div>
+      <div class="row"><span>Subtotal</span><span>Rs.${Number(this.receiptData.subtotal || 0).toFixed(2)}</span></div>
+      <div class="row"><span>Discount</span><span>Rs.${Number(this.receiptData.totalDiscount || 0).toFixed(2)}</span></div>
+      <div class="row total"><span>TOTAL</span><span>Rs.${Number(this.receiptData.finalTotal || 0).toFixed(2)}</span></div>
 
       <div class="divider"></div>
 
-      <div class="footer">
-        Thank you for your business<br>
-        Woow Mobile<br>
-        071-0539476
-      </div>
+      <div class="contact">071-0539476</div>
     </div>
   </body>
   </html>
