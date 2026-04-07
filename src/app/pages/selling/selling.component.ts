@@ -435,7 +435,7 @@ export class SellingComponent implements OnInit {
   <div class="receipt">
     <div class="header center">
       <img src="/logo.jpg" class="logo" alt="Woow Mobile Logo" />
-      <div class="brand">Woow Mobile</div>
+      <div class="brand">WoW Mobile</div>
       <div class="sub">Accessories Store</div>
       <div class="title">SALES RECEIPT</div>
       <div class="meta">${this.esc(new Date(this.receiptData.timestamp).toLocaleString())}</div>
@@ -479,9 +479,9 @@ export class SellingComponent implements OnInit {
     <div class="divider"></div>
 
     <div class="footer">
-      <div class="thanks">Thank you for visiting Woow Mobile</div>
+      <div class="thanks">Thank you for visiting WoW Mobile</div>
       <div class="come">Come again!</div>
-      <div class="wa">WhatsApp: 071-0539476</div>
+      <div class="wa">WhatsApp: 071-4567801/071-0539476</div>
     </div>
   </div>
 </body>
